@@ -9,7 +9,7 @@ function setup()
 function draw()
 {
   let text_eg = '';
-  background(223);
+  background(27);
   noFill();
   stroke(0);
   textSize(32);
