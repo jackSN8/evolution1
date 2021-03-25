@@ -23,7 +23,7 @@ class DNA
   ///are the same as a target. Obviousely in the real world fitness
   ///is essentially a function of how much you fuck, whereas in this
   ///case this determines how much the DNA gets to fuck
-  fitness(tTarget)
+  fitnessCalc(tTarget)
   {
     this.target = tTarget;
     this.fitness=0;
