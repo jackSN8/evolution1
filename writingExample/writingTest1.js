@@ -1,6 +1,7 @@
 let population = [];
 let popSize = 100;
 let target = 'raptor looks healthy';
+let popFitness = [];
 
 
 function setup()
@@ -19,10 +20,10 @@ function draw()
   stroke(0);
   textSize(32);
   ///Calculate the fitness of everything in the population
-  let popFitness = [];
+
   for(let i=0; i<population.length; i++)
   {
-    popFitness[i] = population[i].fitness(target);
+    popFitness[i] = population[i].fitness();
   }
   ///Then Normalize the fitness so that the entire populations fitness fits
   let totalNum = sumArray(popFitness);
@@ -32,6 +33,10 @@ function draw()
     popFitness[i] /= totalNum;
   }
   ///Then make them do the sex
+  //Chance of them being a parent is the fitness, so create mating pool
+  matingPool = makePool(population)
+  //with the fitness being the amount of times in pool
+
 
 }
 
@@ -45,6 +50,31 @@ function sumArray(input)
     total += input[i];
   }
   return total;
+}
+
+///Function to create a mating pool based off the fitness of the individuals
+function makePool()
+{
+  let matingPool = [];
+  for(let i=0; i<population.length;i++)
+  {
+    let fitnessNorm = popFitness*100;
+    for(let j=0; j<fitnessNorm; j++)
+    {
+      matingPool.push(population[i]);
+    }
+  }
+  return matingPool;
+}
+
+///
+function reproduction(population,popFitness)
+{
+  for(let i=0; i<population.length; i++)
+  {
+    let sexSeedM = int(random(population.length));
+    let sexSeedF = int(random(population.length));
+  }
 }
 
 ///Function that takes in a number from 0-63 and returns a char
