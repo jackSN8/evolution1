@@ -2,14 +2,16 @@ let population = [];
 let popSize = 100;
 let target = 'raptor looks healthy';
 let popFitness = new Array(popSize);
+let wordSize;
 
 
 function setup()
 {
   createCanvas(800,500);
+  wordSize = target.length;
   for(let i=0; i<popSize; i++)
   {
-    population.push(new DNA(20));
+    population.push(new DNA(wordSize));
   }
 }
 
@@ -35,10 +37,11 @@ function draw()
     //console.log(popFitness[2]);
   ///Then make them do the sex
   //Chance of them being a parent is the fitness, so create mating pool
-  matingPool = makePool(population)
   //with the fitness being the amount of times in pool
-
-
+  matingPool = makePool(population)
+  //Reproduction algorithim
+  population = reproduction();
+  text(population[1].genes,width/4,height/2);
 }
 
 
@@ -91,11 +94,32 @@ function makePool()
 // ⣿⣿⣿⣿⣷⣤⣬⣅⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 function reproduction()
 {
-  for(let i=0; i<population.length; i++)
+  let children = [];
+  for(let i=0; i<matingPool.length; i++)
   {
-    let sexSeedM = int(random(population.length));
-    let sexSeedF = int(random(population.length));
+    let sexSeedM = int(random(matingPool.length));
+    let sexSeedF = int(random(matingPool.length));
+    children.push(new DNA(wordSize));
+    let tempGene = [];
+    for(let j=0; j<wordSize; j++)
+    {
+      let randomKey = int(random(1,2));
+      if(randomKey==1)
+      {
+        tempGene[j] = matingPool[sexSeedM].genes[j];
+      }
+      else if(randomKey==2)
+      {
+        tempGene[j] = matingPool[sexSeedF].genes[j];
+      }
+      else
+      {
+        console.log("Error, key out of bounds");
+      }
+    }
+    children[i].genes = tempGene;
   }
+  return children;
 }
 
 ///Function that takes in a number from 0-63 and returns a char
