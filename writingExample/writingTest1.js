@@ -13,6 +13,14 @@ function setup()
   {
     population.push(new DNA(wordSize));
   }
+  // test1 = [];
+  // test1.push(new DNA(wordSize));
+  // test1.push(new DNA(wordSize));
+  // test1[0].genes = stringToArray(target);
+  // test1[1].genes = stringToArray("raptor isn unhealthy");
+  // console.log(test1[1].genes);
+  // test1 = reproduction(test1);
+  // console.log(test1[0].genes);
 }
 
 function draw()
@@ -40,8 +48,12 @@ function draw()
   //with the fitness being the amount of times in pool
   matingPool = makePool(population)
   //Reproduction algorithim
-  population = reproduction();
-  text(population[1].genes,width/4,height/2);
+  population = reproduction(matingPool);
+  text(arrayToString(population[1].genes),width/4,height/2);
+  text(arrayToString(population[2].genes),width/4,height/2-100);
+  text(arrayToString(population[3].genes),width/4,height/2-200);
+  text(arrayToString(population[4].genes),width/4,height/2+100);
+
 }
 
 
@@ -92,32 +104,30 @@ function makePool()
 // ⣿⣿⣿⠅⣀⣈⠁⣰⣿⣿⡿⠋⣤⣾⣿⣿⣿⣿⣿⣿⣷⣵⣂⣽⣿⣿⣿⣿⣿⣿
 // ⣿⣿⣿⣄⠘⢿⣿⣿⠟⠋⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
 // ⣿⣿⣿⣿⣷⣤⣬⣅⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-function reproduction()
+function reproduction(inputPool)
 {
   let children = [];
-  for(let i=0; i<matingPool.length; i++)
+  for(let i=0; i<inputPool.length; i++)
   {
-    let sexSeedM = int(random(matingPool.length));
-    let sexSeedF = int(random(matingPool.length));
+    let sexSeedM = int(random(inputPool.length));
+    let sexSeedF = int(random(inputPool.length));
     children.push(new DNA(wordSize));
-    let tempGene = [];
     for(let j=0; j<wordSize; j++)
     {
-      let randomKey = int(random(1,2));
-      if(randomKey==1)
+      let randomKey = int(random(0,2));
+      if(randomKey==0)
       {
-        tempGene[j] = matingPool[sexSeedM].genes[j];
+        children[i].genes[j] = inputPool[sexSeedM].genes[j];
       }
-      else if(randomKey==2)
+      else if(randomKey==1)
       {
-        tempGene[j] = matingPool[sexSeedF].genes[j];
+        children[i].genes[j] = inputPool[sexSeedF].genes[j];
       }
       else
       {
         console.log("Error, key out of bounds");
       }
     }
-    children[i].genes = tempGene;
   }
   return children;
 }
@@ -128,5 +138,27 @@ function makeID(inpNum)
 {
   let characters = ' abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   let output = characters.charAt(inpNum);
+  return output;
+}
+
+
+///Function to convert char array to string
+function arrayToString(input)
+{
+  let output = "";
+  for(let i=0; i<input.length; i++)
+  {
+    output += input[i];
+  }
+  return output;
+}
+///Function to convert string into char array
+function stringToArray(input)
+{
+  let output = [];
+  for(let i=0; i<input.length; i++)
+  {
+    output[i] = input[i];
+  }
   return output;
 }
