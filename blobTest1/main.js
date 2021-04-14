@@ -50,3 +50,31 @@ function vectorHeading(input)
 
   return heading;
 }
+
+///Function to rotate vector to specified heading
+function changeHeading(inputVector,targetHeading)
+{
+  let mag = sqrt(inputVector.x^2+inputVector.y^2);
+  //quadrant I
+  let output;
+  if(targetHeading <= (PI/2))
+  {
+    output = createVector(cos(targetHeading)*mag,sin(targetHeading)*mag);
+  }
+  //quadrant II
+  else if(targetHeading > (PI/2) && targetHeading < PI)
+  {
+    output = createVector(cos(targetHeading*mag,-1*sin(targetHeading)*mag));
+  }
+  //quadrant III
+  else if (targetHeading > PI && targetHeading < (4*PI/3))
+  {
+    output = createVector(-1*cos(targetHeading*mag,-1*sin(targetHeading)*mag));
+  }
+  //quadrant IV
+  else if (targetHeading >(4*PI/3) && targetHeading < (2*PI))
+  {
+    output = createVector(-1*cos(targetHeading*mag),sin(targetHeading)*mag);
+  }
+  return output;
+}

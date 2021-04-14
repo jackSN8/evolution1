@@ -49,8 +49,8 @@ class agent
     }
     text(this.headingDif,700,300);
     if(this.headingDif > this.accuracy)
-    {
-      
+    {     
+      this.velocity = changeHeading(this.velocity,(this.velHeading))
     }
 
 
