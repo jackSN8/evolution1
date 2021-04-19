@@ -36,6 +36,8 @@ class agent
     // this.targetDif = this.targetDif.normalize(0);
     // this.targetDif = p5.Vector.mult(this.targetDif,this.velocity.mag());
     // this.velocityDif = this.targetDif.sub(this.velocity);
+    // console.log(this.velocity.x);
+    // console.log(this.velocity.y);
     this.velHeading = vectorHeading(this.velocity);
 
 
@@ -50,7 +52,9 @@ class agent
     text(this.headingDif,700,300);
     if(this.headingDif > this.accuracy)
     {     
-      this.velocity = changeHeading(this.velocity,(this.velHeading))
+      let d = changeHeading(this.velocity,(this.velHeading));
+      //console.log(d);
+      
     }
 
 

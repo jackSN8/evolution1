@@ -3,6 +3,7 @@ let b;
 
 function setup()
 {
+  console.log("New run");
   createCanvas(800,500);
   a = new agent(createVector(400,250),50,color(100,150,255));
   b = createVector(random(100,700),100);
@@ -35,6 +36,7 @@ function cartesianToPolar(input)
 
 function vectorHeading(input)
 {
+  
   let heading = atan(input.y/input.x);
   //If vector is in quadrant I heading is just arctan y
   //If vector is in quadrant II or III, heading is arctan y + PI
@@ -57,6 +59,8 @@ function changeHeading(inputVector,targetHeading)
   let mag = sqrt(inputVector.x^2+inputVector.y^2);
   //quadrant I
   let output;
+  console.log(mag);
+  console.log(targetHeading);
   if(targetHeading <= (PI/2))
   {
     output = createVector(cos(targetHeading)*mag,sin(targetHeading)*mag);
