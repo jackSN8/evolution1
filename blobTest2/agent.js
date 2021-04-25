@@ -1,13 +1,14 @@
 class Agent
 {
-  constructor(position,velocity,ms)
+  constructor(ms)
   {
     //Positions of the agent
     this.position = createVector(random(width),random(height));
-    this.velocity = velocity;
+    this.velocity = createVector(random(-3,3),random(-3,3));
     this.acceleration = createVector(0,0);
 
     //Paremeters of the agent
+    this.id = int(random(0,2500));
     this.mass = 1;
     this.maxSpeed = ms;
     //Normal movement speed.
@@ -21,6 +22,7 @@ class Agent
   }
   update()
   {
+    this.avoidWalls(0,0,width,height);
 
     this.display();
     //Keep all the movement code that is below at the bottom
@@ -69,40 +71,59 @@ class Agent
   }
 
   //Don't leave the canvas!
-  // avoidWalls(xBoundL,yBoundL,xBoundH,yBoundH)
-  // {
-  //   //Takes in a box with x and y bounds ,
-  //   //and if approaching edge, then creates target vector behind
-  //   //triangle and goes in that direction/
-  //   ///Find where the agent will be in a few frames (ie vision range TBA)
-  //   let expectedPos = p5.Vector.add(this.position,this.velocity);
-  //   expectedPos.mult(5);//5 frames ahead
-  //   console.log(expectedPos.y);
-  //   //Currently takes the current velocity vector, to be added
-  //   //intelligent ability to predict where it is turning towards
-  //   if(expectedPos.x < xBoundL || expectedPos.x > xBoundH)
-  //   {
-  //     this.seek(p5.Vector.mult(expectedPos,-1));
-  //   }
-  //   if(expectedPos.y < yBoundL || expectedPos.y > yBoundH)
-  //   {
-  //     this.seek(p5.Vector.mult(expectedPos,-1));
-  //   }
-  // }
+  avoidWalls(xBoundL,yBoundL,xBoundH,yBoundH)
+  {
+    //Takes in a box with x and y bounds ,
+    //and if approaching edge, then creates target vector behind
+    //triangle and goes in that direction/
+    ///Find where the agent will be in a few frames (ie vision range TBA)
+    let expectedPos = p5.Vector.add(this.position,p5.Vector.mult(this.velocity,5));
+    //Currently takes the current velocity vector, to be added
+    //intelligent ability to predict where it is turning towards
+    if(expectedPos.x < xBoundL || expectedPos.x > xBoundH)
+    {
+      this.avoidPosition(expectedPos);
+    }
+    if(expectedPos.y < yBoundL || expectedPos.y > yBoundH)
+    {
+      this.avoidPosition(expectedPos);
+    }
+  }
+
+  //Avoid an array of other agents
+  avoidOthers(incArray)
+  {
+    let badPeople = [...incArray];//bAD people is agents to avoid
+    //Need to remove yourself from the list so you dont try to avoid yourself
+    for(let i=0; i<badPeople.length; i++)
+    {
+      if(badPeople[i].id == this.id)
+      {
+        badPeople.splice(i,1);
+      }
+    }
+    for(let i=0; i<badPeople.length; i++)
+    {
+      this.avoidPosition(badPeople[i].position)
+    }
+  }
 
   ///Function to make agent avoid going to one specific spot
   avoidPosition(badSpot)
   {
     ///Find where the agent will be in a few frames (ie vision range TBA)
-    let expectedPos = p5.Vector.add(this.position,this.velocity);
-    expectedPos.mult(5);//5 frames vision
-    let expectedDistance = p5.Vector.sub(expectedPos,badSpot).mag();
+    let expectedPos = p5.Vector.add(this.position,p5.Vector.mult(this.velocity,5));
     //Find distance from expected position and point you want to avoid
-    if(expectedDistance < 20)//If closer than abritary 20 pixels, then turn
+    let expectedDistance = p5.Vector.sub(expectedPos,badSpot).mag();
+    console.log(expectedDistance);
+    if(expectedDistance < 50)//If closer than abritary 20 pixels, then turn
     {
-      
+      //Creates vector directly behind agent to seek - this is turning around part
+      let turnPoint = p5.Vector.sub(this.position,this.velocity);
+      let randomVariation = createVector(random(-20,20),random(-20,20));
+      turnPoint.add(randomVariation);
+      this.seek(turnPoint);
     }
-
   }
 
 
