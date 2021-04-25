@@ -6,7 +6,7 @@ function setup()
   createCanvas(800,500);
   angleMode(RADIANS);
   b = createVector(400,200);
-  age= new Agent(createVector(300,200),createVector(0,1),2);
+  age= new Agent(createVector(300,200),createVector(random(-1,1),random(-1,1)),2);
 }
 
 function draw()
@@ -15,5 +15,3 @@ function draw()
   circle(b.x,b.y,50);
   age.update();
 }
-
-
