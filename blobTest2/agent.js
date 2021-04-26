@@ -120,7 +120,7 @@ class Agent
     {
       //Creates vector directly behind agent to seek - this is turning around part
       let turnPoint = p5.Vector.sub(this.position,this.velocity);
-      let randomVariation = createVector(random(-20,20),random(-20,20));
+      //let randomVariation = createVector(random(-20,20),random(-20,20));
       turnPoint.add(randomVariation);
       this.seek(turnPoint);
     }
