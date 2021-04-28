@@ -22,7 +22,7 @@ class Agent
   }
   update()
   {
-    this.avoidWalls(0,0,width,height);
+    //this.avoidWalls(0,0,width,height);
 
     this.display();
     //Keep all the movement code that is below at the bottom
@@ -63,6 +63,26 @@ class Agent
     this.applyForce(steering);
   }
 
+  arrive(target)
+  {
+    //Get target
+    let tempTarget = target;
+    let desired = vectorAdd(p5.Vector.mult(this.position,-1),tempTarget);
+    //Slow down when the agent arrives
+    let speed;
+    if(desired.mag()<100)
+    {
+      speed = map(desired.mag(),0,100,0,this.maxSpeed);
+    }
+    else
+    {
+      speed = this.maxSpeed;
+    }
+    desired.setMag(speed);
+    let steering = desired.sub(this.velocity);
+    steering.setMag(this.maxForce);
+    this.applyForce(steering);
+  }
 
   /// F=MA function
   applyForce(force)
@@ -82,31 +102,31 @@ class Agent
     //intelligent ability to predict where it is turning towards
     if(expectedPos.x < xBoundL || expectedPos.x > xBoundH)
     {
-      this.avoidPosition(expectedPos);
+      
     }
     if(expectedPos.y < yBoundL || expectedPos.y > yBoundH)
     {
       this.avoidPosition(expectedPos);
     }
   }
-
-  //Avoid an array of other agents
-  avoidOthers(incArray)
-  {
-    let badPeople = [...incArray];//bAD people is agents to avoid
-    //Need to remove yourself from the list so you dont try to avoid yourself
-    for(let i=0; i<badPeople.length; i++)
-    {
-      if(badPeople[i].id == this.id)
-      {
-        badPeople.splice(i,1);
-      }
-    }
-    for(let i=0; i<badPeople.length; i++)
-    {
-      this.avoidPosition(badPeople[i].position)
-    }
-  }
+  //
+  // //Avoid an array of other agents
+  // avoidOthers(incArray)
+  // {
+  //   let badPeople = [...incArray];//bAD people is agents to avoid
+  //   //Need to remove yourself from the list so you dont try to avoid yourself
+  //   for(let i=0; i<badPeople.length; i++)
+  //   {
+  //     if(badPeople[i].id == this.id)
+  //     {
+  //       badPeople.splice(i,1);
+  //     }
+  //   }
+  //   for(let i=0; i<badPeople.length; i++)
+  //   {
+  //     this.avoidPosition(badPeople[i].position)
+  //   }
+  // }
 
   ///Function to make agent avoid going to one specific spot
   avoidPosition(badSpot)
@@ -115,13 +135,12 @@ class Agent
     let expectedPos = p5.Vector.add(this.position,p5.Vector.mult(this.velocity,5));
     //Find distance from expected position and point you want to avoid
     let expectedDistance = p5.Vector.sub(expectedPos,badSpot).mag();
-    console.log(expectedDistance);
-    if(expectedDistance < 50)//If closer than abritary 20 pixels, then turn
+    if(expectedDistance < 50)//If closer than abritary 50 pixels, then turn
     {
       //Creates vector directly behind agent to seek - this is turning around part
       let turnPoint = p5.Vector.sub(this.position,this.velocity);
-      let randomVariation = createVector(random(-20,20),random(-20,20));
-      turnPoint.add(randomVariation);
+      //let randomVariation = createVector(random(-20,20),random(-20,20));
+      //turnPoint.add(randomVariation);
       this.seek(turnPoint);
     }
   }
