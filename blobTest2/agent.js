@@ -3,7 +3,7 @@ class Agent
   constructor(ms)
   {
     //Positions of the agent
-    this.position = createVector(random(width),random(height));
+    this.position = createVector(random(100,700),random(100,400));
     this.velocity = createVector(random(-3,3),random(-3,3));
     this.acceleration = createVector(0,0);
 
@@ -13,12 +13,17 @@ class Agent
     this.maxSpeed = ms;
     //Normal movement speed.
     //Could be improved upon by making the actual speed some fraction of this
-    this.maxForce = 0.5;
+    this.maxForce = 0.3;
     //Max speed to changes to velocity with
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
     this.width = 20;
     this.height = 50;
+
+
+    this.turning = false;
+    //dumb variable to store if the agent has recently been turning
+    //used to add overcorrection (or under correction) to turns
   }
   update()
   {
@@ -42,10 +47,14 @@ class Agent
     translate(this.position.x,this.position.y);
     rotate(theta);
     beginShape();
-    vertex(this.width/2,0);
-    vertex(-this.width/2,0);
-    vertex(0,this.height);
+    vertex(this.width/2,0);//right
+    vertex(-this.width/2,0);//left
+    vertex(0,this.height);//top
     endShape();
+    //eyes
+    fill(255);
+    circle(this.width/5,this.height*(3/5),4);
+    circle(-this.width/5,this.height*(3/5),4);
     pop();
 
     fill(255);
@@ -58,6 +67,11 @@ class Agent
     let tempTarget = target;
     let desired = vectorAdd(p5.Vector.mult(this.position,-1),tempTarget);
     desired.setMag(this.maxSpeed);
+    this.steer(desired);
+  }
+  ///Once a desired velocity has been calculated, function to steer agent towards that
+  steer(desired)
+  {
     let steering = desired.sub(this.velocity);
     steering.setMag(this.maxForce);
     this.applyForce(steering);
@@ -93,21 +107,40 @@ class Agent
   //Don't leave the canvas!
   avoidWalls(xBoundL,yBoundL,xBoundH,yBoundH)
   {
-    //Takes in a box with x and y bounds ,
-    //and if approaching edge, then creates target vector behind
-    //triangle and goes in that direction/
-    ///Find where the agent will be in a few frames (ie vision range TBA)
+    ///Function to avoid box laid out by the 4 bounds
     let expectedPos = p5.Vector.add(this.position,p5.Vector.mult(this.velocity,5));
-    //Currently takes the current velocity vector, to be added
-    //intelligent ability to predict where it is turning towards
-    if(expectedPos.x < xBoundL || expectedPos.x > xBoundH)
+    if(expectedPos.x<xBoundL)
     {
-      
+      let desired = createVector(this.maxSpeed,this.velocity.y);
+      this.steer(desired);
+      this.turning = true;
     }
-    if(expectedPos.y < yBoundL || expectedPos.y > yBoundH)
+    if(expectedPos.x>xBoundH)
     {
-      this.avoidPosition(expectedPos);
+      let desired = createVector(-this.maxSpeed,this.velocity.y);
+      this.steer(desired);
+      this.turning = true;
     }
+    if(expectedPos.y<yBoundL)
+    {
+      let desired = createVector(this.velocity.x,this.maxSpeed);
+      this.steer(desired);
+      this.turning = true;
+    }
+    if(expectedPos.y>yBoundH)
+    {
+      let desired = createVector(this.velocity.y,-this.maxSpeed);
+      this.steer(desired);
+      this.turning = true;
+    }
+    if(this.turning == true)
+    {
+      this.turning = false;
+      let desired = this.velocity.copy();
+      desired.setMag(this.maxSpeed);
+      this.steer(desired);
+    }
+
   }
   //
   // //Avoid an array of other agents

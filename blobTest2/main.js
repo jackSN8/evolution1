@@ -1,4 +1,6 @@
-let totalAgents = 1;
+
+
+let totalAgents = 3;
 let agents = [];
 let targ1;
 
@@ -9,7 +11,7 @@ function setup()
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
   {
-    agents.push(new Agent(10));
+    agents.push(new Agent(3));
   }
 }
 
@@ -21,7 +23,10 @@ function draw()
   for(let i=0; i<totalAgents; i++)
   {
     agents[i].update();
-    agents[i].arrive(targ1);
-    //agents[i].avoidOthers(agents);
+    agents[i].avoidWalls(100,100,700,400);
   }
+  fill(190,190,190,127);
+  stroke(127);
+  rect(100,100,width-200,height-200);
+
 }
