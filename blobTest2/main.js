@@ -1,6 +1,6 @@
 
 
-let totalAgents = 3;
+let totalAgents = 1;
 let agents = [];
 let targ1;
 
@@ -24,6 +24,7 @@ function draw()
   {
     agents[i].update();
     agents[i].avoidWalls(100,100,700,400);
+    agents[i].arrive(targ1);
   }
   fill(190,190,190,127);
   stroke(127);

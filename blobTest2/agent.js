@@ -10,16 +10,22 @@ class Agent
     //Paremeters of the agent
     this.id = int(random(0,2500));
     this.mass = 1;
+
+
     this.maxSpeed = ms;
     //Normal movement speed.
-    //Could be improved upon by making the actual speed some fraction of this
+    //Other speeds such as the minimum cutoff speed are
+    //ratios of this maxSpeed, so it affects everything
+
     this.maxForce = 0.3;
     //Max speed to changes to velocity with
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
+
+
     this.width = 20;
     this.height = 50;
-
+    this.theta = this.velocity.heading()-PI/2;
 
     this.turning = false;
     //dumb variable to store if the agent has recently been turning
@@ -38,21 +44,24 @@ class Agent
 
   display()
   {
-    let theta = this.velocity.heading()-PI/2;
+    if(this.velocity.mag()>this.maxSpeed/25)
+    {
+      this.theta = this.velocity.heading()-PI/2;
+    }
     fill(255,0,0);
 
     //Agent visualisation code - currently draws it as triangle
     //facing the direction of movement
     push();
     translate(this.position.x,this.position.y);
-    rotate(theta);
+    rotate(this.theta);
     beginShape();
     vertex(this.width/2,0);//right
     vertex(-this.width/2,0);//left
     vertex(0,this.height);//top
     endShape();
     //eyes
-    fill(255);
+    fill(0);
     circle(this.width/5,this.height*(3/5),4);
     circle(-this.width/5,this.height*(3/5),4);
     pop();
@@ -77,25 +86,48 @@ class Agent
     this.applyForce(steering);
   }
 
+  //stop the agent
+  stop()
+  {
+    if(this.velocity.mag()>this.maxSpeed/25)
+    {
+      let steering = p5.Vector.mult(this.velocity,-1);
+      steering.setMag(this.maxForce);
+      this.applyForce(steering);
+    }
+    else if(this.velocity.mag()>0 && this.velocity.mag()<this.maxSpeed/25)
+    {
+      this.velocity.setMag(0);
+    }
+  }
+
   arrive(target)
   {
     //Get target
     let tempTarget = target;
-    let desired = vectorAdd(p5.Vector.mult(this.position,-1),tempTarget);
+    let desired = p5.Vector.sub(tempTarget,this.position);
     //Slow down when the agent arrives
     let speed;
-    if(desired.mag()<100)
+    if(desired.mag()<150 && desired.mag()>40)
     {
       speed = map(desired.mag(),0,100,0,this.maxSpeed);
+      desired.setMag(speed);
+      this.steer(desired);
     }
-    else
+    else if(desired.mag()<40)
+    {
+      this.stop();
+      // speed=0;
+      // desired = tempTarget.;
+      // desired.setMag(speed);
+      // this.steer(desired);
+    }
+    else if(desired.mag()>150)
     {
       speed = this.maxSpeed;
+      desired.setMag(speed);
+      this.steer(desired);
     }
-    desired.setMag(speed);
-    let steering = desired.sub(this.velocity);
-    steering.setMag(this.maxForce);
-    this.applyForce(steering);
   }
 
   /// F=MA function
