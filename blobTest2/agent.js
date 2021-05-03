@@ -1,6 +1,6 @@
 class Agent
 {
-  constructor(ms)
+  constructor(size,maxs,maxf)
   {
     //Positions of the agent
     this.position = createVector(random(100,700),random(100,400));
@@ -12,19 +12,19 @@ class Agent
     this.mass = 1;
 
 
-    this.maxSpeed = ms;
+    this.maxSpeed = maxs;
     //Normal movement speed.
     //Other speeds such as the minimum cutoff speed are
     //ratios of this maxSpeed, so it affects everything
 
-    this.maxForce = 0.3;
+    this.maxForce = maxf;
     //Max speed to changes to velocity with
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
 
-    this.width = 20;
-    this.height = 50;
+    this.width = size;
+    this.height = size*2.5;
     this.theta = this.velocity.heading()-PI/2;
 
     this.turning = false;
@@ -60,10 +60,11 @@ class Agent
     vertex(-this.width/2,0);//left
     vertex(0,this.height);//top
     endShape();
+    ///No eyes for now!
     //eyes
     fill(0);
-    circle(this.width/5,this.height*(3/5),4);
-    circle(-this.width/5,this.height*(3/5),4);
+    circle(this.width/5,this.height*(3/5),this.width/20);
+    circle(-this.width/5,this.height*(3/5),this.width/20);
     pop();
 
     fill(255);
@@ -109,17 +110,17 @@ class Agent
     let desired = p5.Vector.sub(tempTarget,this.position);
     //Slow down when the agent arrives
     let speed;
-    if(desired.mag()<150 && desired.mag()>40)
+    if(desired.mag()<this.maxSpeed*15 && desired.mag()>this.maxSpeed*5)
     {
       speed = map(desired.mag(),0,100,0,this.maxSpeed);
       desired.setMag(speed);
       this.steer(desired);
     }
-    else if(desired.mag()<40)
+    else if(desired.mag()<this.maxSpeed*5)
     {
       this.stop();
     }
-    else if(desired.mag()>150)
+    else if(desired.mag()>this.maxSpeed*15)
     {
       speed = this.maxSpeed;
       desired.setMag(speed);
