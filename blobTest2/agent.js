@@ -100,7 +100,8 @@ class Agent
       this.velocity.setMag(0);
     }
   }
-
+  ///Go to target and then stop
+  //tba change distances to some ratio of maxspeed
   arrive(target)
   {
     //Get target
@@ -117,10 +118,6 @@ class Agent
     else if(desired.mag()<40)
     {
       this.stop();
-      // speed=0;
-      // desired = tempTarget.;
-      // desired.setMag(speed);
-      // this.steer(desired);
     }
     else if(desired.mag()>150)
     {
@@ -192,6 +189,33 @@ class Agent
   //     this.avoidPosition(badPeople[i].position)
   //   }
   // }
+
+  //Avoid a group of other agnets 2.0 - takes in array of agents and desired seperation distance
+  avoidOthers(agentArray,seperation)
+  {
+    let totalNearby = 0;
+    let finalDesired = createVector(0,0);//Vector to store the end calculated desired vector
+    //let expectedPos = p5.Vector.add(this.position,this.velocity);
+    for(let i=0; i<agentArray.length; i++)
+    {
+      let other = agentArray[i];
+      //find distance to other agents
+      let distance = p5.Vector.dist(other.position,this.position);
+      if(distance > 0 && (distance <seperation))//check that you are near, and you are not the same agent
+      {
+        //create vector pointing away from nearby agent
+        let opposite = p5.Vector.sub(this.position,other.position);
+        opposite.normalize();
+        totalNearby ++;
+        finalDesired.add(opposite);
+      }
+    }
+    if(totalNearby>0)
+    {
+      finalDesired.setMag(this.maxSpeed);
+      this.steer(finalDesired);
+    }
+  }
 
   ///Function to make agent avoid going to one specific spot
   avoidPosition(badSpot)
