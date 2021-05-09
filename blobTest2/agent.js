@@ -4,7 +4,7 @@ class Agent
   {
     //Positions of the agent
     this.position = createVector(random(100,700),random(100,400));
-    this.velocity = createVector(random(-3,3),random(-3,3));
+    this.velocity = createVector(random(-0.5,0.5),random(-0.5,0.5));
     this.acceleration = createVector(0,0);
 
     //Paremeters of the agent
@@ -22,19 +22,30 @@ class Agent
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
-
+    //Agent specs
     this.width = size;
     this.height = size*2.5;
     this.theta = this.velocity.heading()-PI/2;
+    this.color = color(255,0,0);
+    this.searchConeAngle = PI/8;
+    this.searchConeRadius = 30;
 
+
+    this.hasTarget = false;
     this.turning = false;
     //dumb variable to store if the agent has recently been turning
     //used to add overcorrection (or under correction) to turns
+    this.t = random(0,1000);
+
+    this.wanderTheta = 0;//Stores where on the imaginary circle the agent is heading to
+    this.wanderMaxRad = PI/32;//Stores how much on the imaginary circle to change by at one time
+    this.wanderMultiplier = 5;//Stores how large the imaginary circle is (radius?)
+    //Even more dumb variable to enable wandering behavior
   }
   update()
   {
     //this.avoidWalls(0,0,width,height);
-
+    this.t ++;
     this.display();
     //Keep all the movement code that is below at the bottom
     this.position.add(this.velocity);
@@ -48,7 +59,7 @@ class Agent
     {
       this.theta = this.velocity.heading()-PI/2;
     }
-    fill(255,0,0);
+    fill(this.color);
 
     //Agent visualisation code - currently draws it as triangle
     //facing the direction of movement
@@ -85,6 +96,42 @@ class Agent
     let steering = desired.sub(this.velocity);
     steering.setMag(this.maxForce);
     this.applyForce(steering);
+  }
+
+  //wander using perlin noise to aim agent
+  wander()
+  {
+    //How jerky the perlin noise is is defined here by what you divide t by
+    let tempT = this.t/1;
+    //Create a circle in front of the agent, then aim at perlin noise defined location along circle
+    //let direction = p5.Vector.normalize(this.velocity);
+    let direction = this.velocity.copy();
+     direction.normalize();
+     direction.mult(20);//Abritary for now, tbd
+     let circleOrigin = p5.Vector.add(this.position,direction);//Create circle in front of agent
+    this.wanderTheta += (noise(tempT)-0.5)*PI/32; //Then steer to perlin noise defined position along circle
+     //this.wanderTheta += random(-this.wanderMaxRad,this.wanderMaxRad);
+     let circlePos = createVector(cos(this.wanderTheta),sin(this.wanderTheta)); //creates circle here as unit circle
+     //circlePos.mult(this.wanderMultiplier);
+     let target = p5.Vector.add(circlePos,circleOrigin);
+    //let target = p5.Vector.add(this.position,direction);
+    //this.seek(target);
+    if(int(random(0,100))==42)
+    {
+      this.wanderTheta = 0;
+      //this.seek(createVector(width/2,height/2));
+    }
+  }
+
+  //Search for a certain physical object. Takes in array of object type -
+  //object MUST have attribute 'object'.position
+  searchFor(type)
+  {
+      //create a search cone in front of the agent
+      push();
+      translate(this.position.x,this.position.y);
+      rotate(this.theta);
+      
   }
 
   //stop the agent
