@@ -37,7 +37,8 @@ class Agent
     //used to add overcorrection (or under correction) to turns
     this.t = random(0,1000);
 
-    this.wanderTheta = 0;//Stores where on the imaginary circle the agent is heading to
+    this.wanderThetaX = 0;//Stores where on the imaginary circle the agent is heading to
+    this.wanderThetaY = 0;
     this.wanderMaxRad = PI/32;//Stores how much on the imaginary circle to change by at one time
     this.wanderMultiplier = 5;//Stores how large the imaginary circle is (radius?)
     //Even more dumb variable to enable wandering behavior
@@ -102,36 +103,36 @@ class Agent
   wander()
   {
     //How jerky the perlin noise is is defined here by what you divide t by
-    let tempT = this.t/1;
+    let tempT = this.t;
     //Create a circle in front of the agent, then aim at perlin noise defined location along circle
     //let direction = p5.Vector.normalize(this.velocity);
     let direction = this.velocity.copy();
      direction.normalize();
      direction.mult(20);//Abritary for now, tbd
      let circleOrigin = p5.Vector.add(this.position,direction);//Create circle in front of agent
-    this.wanderTheta += (noise(tempT)-0.5)*PI/32; //Then steer to perlin noise defined position along circle
-     //this.wanderTheta += random(-this.wanderMaxRad,this.wanderMaxRad);
-     let circlePos = createVector(cos(this.wanderTheta),sin(this.wanderTheta)); //creates circle here as unit circle
-     //circlePos.mult(this.wanderMultiplier);
-     let target = p5.Vector.add(circlePos,circleOrigin);
+    this.wanderThetaX = noise(tempT); //Then steer to perlin noise defined position 
+    this.wanderThetaY = noise(tempT); //Then steer to perlin noise defined position 
+    this.wanderThetaX = map(this.wanderThetaX,0,1,0,PI);
+    this.wanderThetaY = map(this.wanderThetaY,0,1,-PI/2,PI/2);
+    //this.wanderTheta += random(-this.wanderMaxRad,this.wanderMaxRad);
+    let circlePos = createVector(cos(this.wanderThetaX),sin(this.wanderThetaY)); //creates circle here as unit circle
+    //circlePos.mult(this.wanderMultiplier);
+    let target = p5.Vector.add(circlePos,circleOrigin);
     //let target = p5.Vector.add(this.position,direction);
     //this.seek(target);
-    if(int(random(0,100))==42)
-    {
-      this.wanderTheta = 0;
-      //this.seek(createVector(width/2,height/2));
-    }
   }
 
   //Search for a certain physical object. Takes in array of object type -
   //object MUST have attribute 'object'.position
-  searchFor(type)
+  searchFor()
   {
       //create a search cone in front of the agent
       push();
       translate(this.position.x,this.position.y);
       rotate(this.theta);
-      
+      fill(255,255,255,30);
+      arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
+      pop();
   }
 
   //stop the agent
