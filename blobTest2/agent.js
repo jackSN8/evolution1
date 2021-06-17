@@ -132,10 +132,10 @@ class Agent
       push();
       translate(this.position.x,this.position.y);
       rotate(this.theta);
-      fill(255,255,255,30);
-      arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
-      let searchLine = createVector(0,this.searchConeRadius);
-      line(0,0,searchLine.x,searchLine.y);
+//       fill(255,255,255,30);
+//       arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
+//       let searchLine = createVector(0,this.searchConeRadius);
+//       line(0,0,searchLine.x,searchLine.y);
       //Then, find positions of all objects in array
 
       for(let i=0; i<obArray.length; i++)
