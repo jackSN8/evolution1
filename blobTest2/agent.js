@@ -27,8 +27,10 @@ class Agent
     this.height = size*2.5;
     this.theta = this.velocity.heading()-PI/2;
     this.color = color(255,0,0);
-    this.searchConeAngle = PI/8;
-    this.searchConeRadius = 30;
+
+    //Stores info about search cone
+    this.searchConeAngle = PI/6;
+    this.searchConeRadius = 90;
 
 
     this.hasTarget = false;
@@ -124,14 +126,25 @@ class Agent
 
   //Search for a certain physical object. Takes in array of object type -
   //object MUST have attribute 'object'.position
-  searchFor()
+  searchFor(obArray)
   {
       //create a search cone in front of the agent
       push();
       translate(this.position.x,this.position.y);
       rotate(this.theta);
-      fill(255,255,255,30);
-      arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
+//       fill(255,255,255,30);
+//       arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
+//       let searchLine = createVector(0,this.searchConeRadius);
+//       line(0,0,searchLine.x,searchLine.y);
+      //Then, find positions of all objects in array
+
+      for(let i=0; i<obArray.length; i++)
+      {
+        
+      }
+
+
+
       pop();
   }
 

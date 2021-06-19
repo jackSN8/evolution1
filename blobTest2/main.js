@@ -33,7 +33,7 @@ function draw()
     agents[i].update();
     agents[i].avoidWalls(100,100,700,400);
     agents[i].avoidOthers(agents,10);
-    agents[i].searchFor();
+    agents[i].searchFor(foods);
     if(!agents[i].hasTarget)
     {
         agents[i].wander();
