@@ -20,7 +20,7 @@ function setup()
   {
     foods.push(new food(createVector(random(100,width-100),random(100,height-100))));
   }
-  agents[10].color = (0,255,0);
+  //agents[10].color = (0,255,0);
 }
 
 function draw()
