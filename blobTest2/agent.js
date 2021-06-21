@@ -112,8 +112,8 @@ class Agent
      direction.normalize();
      direction.mult(20);//Abritary for now, tbd
      let circleOrigin = p5.Vector.add(this.position,direction);//Create circle in front of agent
-    this.wanderThetaX = noise(tempT); //Then steer to perlin noise defined position 
-    this.wanderThetaY = noise(tempT); //Then steer to perlin noise defined position 
+    this.wanderThetaX = noise(tempT); //Then steer to perlin noise defined position
+    this.wanderThetaY = noise(tempT); //Then steer to perlin noise defined position
     this.wanderThetaX = map(this.wanderThetaX,0,1,0,PI);
     this.wanderThetaY = map(this.wanderThetaY,0,1,-PI/2,PI/2);
     //this.wanderTheta += random(-this.wanderMaxRad,this.wanderMaxRad);
@@ -132,10 +132,17 @@ class Agent
       push();
       translate(this.position.x,this.position.y);
       rotate(this.theta);
+<<<<<<< HEAD
       fill(255,255,255,30);
       arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
       let searchLine = createVector(0,this.searchConeRadius);
       line(0,0,searchLine.x,searchLine.y);
+=======
+//       fill(255,255,255,30);
+//       arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
+//       let searchLine = createVector(0,this.searchConeRadius);
+//       line(0,0,searchLine.x,searchLine.y);
+>>>>>>> origin/main
       //Then, find positions of all objects in array
       pop();
       let pots = [];
