@@ -132,17 +132,17 @@ class Agent
       push();
       translate(this.position.x,this.position.y);
       rotate(this.theta);
-<<<<<<< HEAD
+// <<<<<<< HEAD
       fill(255,255,255,30);
       arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
       let searchLine = createVector(0,this.searchConeRadius);
       line(0,0,searchLine.x,searchLine.y);
-=======
+// =======
 //       fill(255,255,255,30);
 //       arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
 //       let searchLine = createVector(0,this.searchConeRadius);
 //       line(0,0,searchLine.x,searchLine.y);
->>>>>>> origin/main
+// >>>>>>> origin/main
       //Then, find positions of all objects in array
       pop();
       let pots = [];
@@ -151,19 +151,22 @@ class Agent
         pots.push(obArray[i].position);
         //Find vector from target to agent
         let vecRel = p5.Vector.sub(pots[i],(this.position));
-        ////Tempory code to visualise that vector
+        // //Tempory code to visualise that vector
         // push();
         // translate(this.position.x,this.position.y);
         // line(0,0,vecRel.x,vecRel.y);
         // pop();
+
         //Find angle of target relative to current heading of agent
         let tgtHeading = vecRel.heading();
         let headingDif = this.velocity.heading()-tgtHeading;
-        if(this.color = (0,255,0))
+        //Find distance of target relative to current pos of agent
+        let posDif = p5.Vector.sub(this.position,pots[i].position);
+        let posDifMag = sqrt(posDif.x^2+posDif.y^2);
+        if(abs(headingDif)<this.searchConeAngle/4 && posDifMag<this.searchConeRadius)
         {
-          console.log(headingDif);
+          this.seek(pots[i]);
         }
-
 
 
       }

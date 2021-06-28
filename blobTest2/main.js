@@ -34,6 +34,7 @@ function draw()
     agents[i].avoidWalls(100,100,700,400);
     agents[i].avoidOthers(agents,10);
     agents[i].searchFor(foods);
+    // agents[i].seek(createVector(mouseX,mouseY));
     if(!agents[i].hasTarget)
     {
         agents[i].wander();
