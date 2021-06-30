@@ -32,6 +32,10 @@ class Agent
     this.searchConeAngle = PI/4;
     this.searchConeRadius = 90;
 
+    this.fullness = 0;//How much food the agent has eaten
+    //For now 0 is nothing, 1 is survival rations, and 2 is reproduction rations
+
+
 
     this.hasTarget = false;
     this.turning = false;
@@ -133,16 +137,11 @@ class Agent
       translate(this.position.x,this.position.y);
       rotate(this.theta);
 // <<<<<<< HEAD
-      fill(255,255,255,30);
-      arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
-      let searchLine = createVector(0,this.searchConeRadius);
-      line(0,0,searchLine.x,searchLine.y);
-// =======
-//       fill(255,255,255,30);
-//       arc(0, 0, this.searchConeRadius, this.searchConeRadius, (PI/2)-this.searchConeAngle/2, (PI/2)+this.searchConeAngle, PIE);
-//       let searchLine = createVector(0,this.searchConeRadius);
-//       line(0,0,searchLine.x,searchLine.y);
-// >>>>>>> origin/main
+      // //Code to visualize search cone
+      // fill(255,255,255,30);
+      // arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
+      // let searchLine = createVector(0,this.searchConeRadius);
+      // line(0,0,searchLine.x,searchLine.y);
       //Then, find positions of all objects in array
       pop();
       let pots = [];
@@ -161,18 +160,12 @@ class Agent
         let tgtHeading = vecRel.heading();
         let headingDif = this.velocity.heading()-tgtHeading;
         //Find distance of target relative to current pos of agent
-        let posDif = p5.Vector.sub(this.position,pots[i].position);
-        let posDifMag = sqrt(posDif.x^2+posDif.y^2);
-        if(abs(headingDif)<this.searchConeAngle/4 && posDifMag<this.searchConeRadius)
+        let posDif = p5.Vector.dist(pots[i],this.position);
+        if(abs(headingDif)<this.searchConeAngle/2 && posDif<this.searchConeRadius/2)
         {
           this.seek(pots[i]);
         }
-
-
-      }
-      
-
-      
+      }           
   }
 
   //stop the agent

@@ -33,6 +33,7 @@ function draw()
     agents[i].update();
     agents[i].avoidWalls(100,100,700,400);
     agents[i].avoidOthers(agents,10);
+    agents[i].searchFor(agents);
     agents[i].searchFor(foods);
     // agents[i].seek(createVector(mouseX,mouseY));
     if(!agents[i].hasTarget)
