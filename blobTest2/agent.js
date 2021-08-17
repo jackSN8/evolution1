@@ -7,11 +7,7 @@ class Agent
     this.velocity = createVector(random(-0.5,0.5),random(-0.5,0.5));
     this.acceleration = createVector(0,0);
 
-    //Paremeters of the agent
-    this.id = int(random(0,2500));
-    this.mass = 1;
-
-
+    ////Agent specs
     this.maxSpeed = maxs;
     //Normal movement speed.
     //Other speeds such as the minimum cutoff speed are
@@ -22,7 +18,8 @@ class Agent
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
-    //Agent specs
+    this.id = int(random(0,2500));
+    this.mass = 1;
     this.width = size;
     this.height = size*2.5;
     this.theta = this.velocity.heading()-PI/2;
@@ -34,7 +31,7 @@ class Agent
 
     this.fullness = 0;//How much food the agent has eaten
     //For now 0 is nothing, 1 is survival rations, and 2 is reproduction rations
-
+    this.dead = false;
 
 
     this.hasTarget = false;
@@ -58,6 +55,22 @@ class Agent
     this.position.add(this.velocity);
     this.velocity.add(this.acceleration);
     this.acceleration.mult(0);
+    ///If it is dark, and the creature is hungry, it freezes to death
+    if(illumination<0.5 && this.fullness<=0)
+    {
+      this.die();
+    }
+    ///Creature progressively gets more hungry
+    this.fullness -= 1/1440;//At this rate, 1 food lasts a creature 2 days
+    //If creature has loads of food, it asexualy reproduces
+    if(this.fullness>=3)
+    {
+      this.fullness--;
+      agents.push(new Agent(5,0.5,0.05));
+      totalAgents++;
+    }
+
+
   }
 
   display()
@@ -170,6 +183,7 @@ class Agent
 
   //Eat food -- agent always eats food when it runs into it,
   //Maybe changed down the line
+  //Prbly want to add animation
   eat()
   {
     let foodDistances = [];
@@ -183,9 +197,8 @@ class Agent
       // }
       if(foodDistances[i]<4)
       {
-        console.log("xd");
         foods[i].eaten();
-        this.energy ++;
+        this.fullness ++;
       }
     }
   }
@@ -194,11 +207,13 @@ class Agent
   die()
   {
     //Incredibly dodgy right now - just moves agent offscreen and makes it unable to moves
+    //Prbly want to add animation as well
     //If performance is problem tbd, actually delete agent
     this.position = createVector(10000,10000);
     this.velocity = createVector(0,0);
     this.maxForce = 0;
     this.maxSpeed = 0;
+    this.dead = true;
   }
 
   //stop the agent

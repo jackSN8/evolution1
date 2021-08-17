@@ -9,6 +9,7 @@ let foods = [];
 let time = 0;
 let illumination;
 let bounds = 50;
+let aliveCreatures = totalAgents;
 
 function setup()
 {
@@ -50,7 +51,6 @@ function draw()
         agents[i].wander();
     }
   }
-
   for(let i=0; i<totalFood; i++)
   {
     foods[i].display();
@@ -59,4 +59,16 @@ function draw()
   noStroke();
   rect(bounds,bounds,width-bounds*2,height-bounds*2);
   stroke(127);
+
+  ////Write to screen how many alive creatures there are
+  //Count alive agents
+  aliveCreatures = 0;
+  for(let i=0; i<totalAgents; i++)
+  {
+    if(!agents[i].dead)
+    {
+      aliveCreatures ++;
+    }
+  }
+  text(aliveCreatures,width-70,20);
 }
