@@ -6,9 +6,13 @@ let targ1;
 
 let totalFood = 50;
 let foods = [];
+let time = 0;
+let illumination;
+let bounds = 50;
 
 function setup()
 {
+  frameRate(60);
   createCanvas(800,500);
   angleMode(RADIANS);
   targ1 = createVector(200,200);
@@ -18,7 +22,7 @@ function setup()
   }
   for(let i=0; i<totalFood; i++)
   {
-    foods.push(new food(createVector(random(100,width-100),random(100,height-100))));
+    foods.push(new food(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
   }
   //agents[10].color = (0,255,0);
 }
@@ -28,13 +32,18 @@ function draw()
   targ1 = createVector(mouseX,mouseY);
   background(27);
   circle(targ1.x,targ1.y,30);
+  time +=(PI/720);//Time for a single day-night-day cycle is 1440 frames or 24 seconds
+  illumination = cos(time)+1;
+  agents[1].color = color(0,255,255);
   for(let i=0; i<totalAgents; i++)
   {
     agents[i].update();
-    agents[i].avoidWalls(100,100,700,400);
+    agents[i].avoidWalls(bounds,width-bounds,bounds,height-bounds);
     agents[i].avoidOthers(agents,10);
-    agents[i].searchFor(agents);
+    //agents[i].searchFor(agents);
     agents[i].searchFor(foods);
+    agents[i].eat();
+
     // agents[i].seek(createVector(mouseX,mouseY));
     if(!agents[i].hasTarget)
     {
@@ -46,8 +55,8 @@ function draw()
   {
     foods[i].display();
   }
-  fill(190,190,190,127);
+  fill(20*illumination,20*illumination,95*illumination,127);
+  noStroke();
+  rect(bounds,bounds,width-bounds*2,height-bounds*2);
   stroke(127);
-  rect(100,100,width-200,height-200);
-
 }

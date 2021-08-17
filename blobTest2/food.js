@@ -11,4 +11,11 @@ class food
     circle(this.position.x,this.position.y,5);
     fill(255);
   }
+
+  eaten()
+  {
+    this.position.x = random(bounds,width-bounds);
+    this.position.y = random(bounds,height-bounds);
+
+  }
 }

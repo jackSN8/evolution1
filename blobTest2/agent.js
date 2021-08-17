@@ -105,7 +105,7 @@ class Agent
     this.applyForce(steering);
   }
 
-  //wander using perlin noise to aim agent
+  //wander using perlin noise to aim agent - currently not active
   wander()
   {
     //How jerky the perlin noise is is defined here by what you divide t by
@@ -165,7 +165,40 @@ class Agent
         {
           this.seek(pots[i]);
         }
-      }           
+      }
+  }
+
+  //Eat food -- agent always eats food when it runs into it,
+  //Maybe changed down the line
+  eat()
+  {
+    let foodDistances = [];
+    for(let i=0; i<foods.length; i++)
+    {
+      foodDistances.push(p5.Vector.sub(this.position,foods[i].position).mag());
+      //console.log(p5.Vector.sub(this.position,foods[i].position));
+      // if(this.color.levels[2] == 255)
+      // {
+      //   console.log(foodDistances[i]);
+      // }
+      if(foodDistances[i]<4)
+      {
+        console.log("xd");
+        foods[i].eaten();
+        this.energy ++;
+      }
+    }
+  }
+
+  //Kills the agent according to any death scenario
+  die()
+  {
+    //Incredibly dodgy right now - just moves agent offscreen and makes it unable to moves
+    //If performance is problem tbd, actually delete agent
+    this.position = createVector(10000,10000);
+    this.velocity = createVector(0,0);
+    this.maxForce = 0;
+    this.maxSpeed = 0;
   }
 
   //stop the agent
@@ -216,7 +249,7 @@ class Agent
   }
 
   //Don't leave the canvas!
-  avoidWalls(xBoundL,yBoundL,xBoundH,yBoundH)
+  avoidWalls(xBoundL,xBoundH,yBoundL,yBoundH)
   {
     ///Function to avoid box laid out by the 4 bounds
     let expectedPos = p5.Vector.add(this.position,p5.Vector.mult(this.velocity,5));
@@ -271,6 +304,9 @@ class Agent
   //     this.avoidPosition(badPeople[i].position)
   //   }
   // }
+
+
+
 
   //Avoid a group of other agnets 2.0 - takes in array of agents and desired seperation distance
   avoidOthers(agentArray,seperation)
