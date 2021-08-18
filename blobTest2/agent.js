@@ -40,11 +40,18 @@ class Agent
     //used to add overcorrection (or under correction) to turns
     this.t = random(0,1000);
 
-    this.wanderThetaX = 0;//Stores where on the imaginary circle the agent is heading to
-    this.wanderThetaY = 0;
-    this.wanderMaxRad = PI/32;//Stores how much on the imaginary circle to change by at one time
-    this.wanderMultiplier = 5;//Stores how large the imaginary circle is (radius?)
-    //Even more dumb variable to enable wandering behavior
+
+    // ////Depricated variables
+    // this.wanderThetaX = 0;//Stores where on the imaginary circle the agent is heading to
+    // this.wanderThetaY = 0;
+    // this.wanderMaxRad = PI/32;//Stores how much on the imaginary circle to change by at one time
+    // this.wanderMultiplier = 5;//Stores how large the imaginary circle is (radius?)
+
+
+    this.wanderSmoothing = 100;//The higher the number the smoother and less
+    //random seeming the wandering will be
+
+
   }
   update()
   {
@@ -118,28 +125,62 @@ class Agent
     this.applyForce(steering);
   }
 
-  //wander using perlin noise to aim agent - currently not active
+  // // /////////Depricated wanda function, prbly sucks
+  // // //wander using perlin noise to aim agent - currently not active
+  // // wander()
+  // // {
+  // //   //How jerky the perlin noise is is defined here by what you divide t by
+  // //   let tempT = this.t;
+  // //   //Create a circle in front of the agent, then aim at perlin noise defined location along circle
+  // //   //let direction = p5.Vector.normalize(this.velocity);
+  // //   let direction = this.velocity.copy();
+  // //    direction.normalize();
+  // //    direction.mult(20);//Abritary for now, tbd
+  // //    let circleOrigin = p5.Vector.add(this.position,direction);//Create circle in front of agent
+  // //   this.wanderThetaX = noise(tempT); //Then steer to perlin noise defined position
+  // //   this.wanderThetaY = noise(tempT); //Then steer to perlin noise defined position
+  // //   this.wanderThetaX = map(this.wanderThetaX,0,1,0,PI);
+  // //   this.wanderThetaY = map(this.wanderThetaY,0,1,-PI/2,PI/2);
+  // //   //this.wanderTheta += random(-this.wanderMaxRad,this.wanderMaxRad);
+  // //   let circlePos = createVector(cos(this.wanderThetaX),sin(this.wanderThetaY)); //creates circle here as unit circle
+  // //   //circlePos.mult(this.wanderMultiplier);
+  // //   let target = p5.Vector.add(circlePos,circleOrigin);
+  // //   let target = p5.Vector.add(this.position,direction);
+  // //   this.seek(target);
+  // // }
+
   wander()
   {
-    //How jerky the perlin noise is is defined here by what you divide t by
-    let tempT = this.t;
-    //Create a circle in front of the agent, then aim at perlin noise defined location along circle
-    //let direction = p5.Vector.normalize(this.velocity);
-    let direction = this.velocity.copy();
-     direction.normalize();
-     direction.mult(20);//Abritary for now, tbd
-     let circleOrigin = p5.Vector.add(this.position,direction);//Create circle in front of agent
-    this.wanderThetaX = noise(tempT); //Then steer to perlin noise defined position
-    this.wanderThetaY = noise(tempT); //Then steer to perlin noise defined position
-    this.wanderThetaX = map(this.wanderThetaX,0,1,0,PI);
-    this.wanderThetaY = map(this.wanderThetaY,0,1,-PI/2,PI/2);
-    //this.wanderTheta += random(-this.wanderMaxRad,this.wanderMaxRad);
-    let circlePos = createVector(cos(this.wanderThetaX),sin(this.wanderThetaY)); //creates circle here as unit circle
-    //circlePos.mult(this.wanderMultiplier);
-    let target = p5.Vector.add(circlePos,circleOrigin);
-    //let target = p5.Vector.add(this.position,direction);
-    //this.seek(target);
+    ///Wanders to a perlin noise defined point on the edge of the agents search searchConeAngle
+    //How smooth perlin noise is defined by what you divide t by
+    let tempT = this.t/this.wanderSmoothing;
+    ///It will need to not wander when anything else is happening --tba
+    ///now find the position on the search cone to aim for
+    let tempPerlinT = noise(tempT);
+    ///Map perlin noise onto angle of searchCone
+    let searchConeAngle = map(tempPerlinT,0,1,-this.searchConeAngle/2,this.searchConeAngle/2);
+
+    //Now create a vector pointing to that point
+    let targetWanderPoint = createVector(1,0);
+    targetWanderPoint.setHeading(this.theta+searchConeAngle+PI/2)
+    targetWanderPoint.setMag(this.searchConeRadius);
+
+    //Now translate that vector
+    targetWanderPoint = p5.Vector.add(this.position,targetWanderPoint);
+    //DEBUG: line(this.position.x,this.position.y,targetWanderPoint.x,targetWanderPoint.y);
+    ////Now aim for that point
+    strokeWeight(3);
+    point(targetWanderPoint.x,targetWanderPoint.y);
+    this.seek(targetWanderPoint);
+    strokeWeight(1);
+
+
   }
+
+
+
+
+
 
   //Search for a certain physical object. Takes in array of object type -
   //object MUST have attribute 'object'.position
@@ -176,28 +217,28 @@ class Agent
         let posDif = p5.Vector.dist(pots[i],this.position);
         if(abs(headingDif)<this.searchConeAngle/2 && posDif<this.searchConeRadius/2)
         {
+          this.hasTarget = true;
           this.seek(pots[i]);
+        }
+        else
+        {
+          this.hasTarget = false;///Holy fuck this is bad code, need to merge this varable w the avoid walls one tba
         }
       }
   }
 
   //Eat food -- agent always eats food when it runs into it,
   //Maybe changed down the line
-  //Prbly want to add animation
+  //Prbly want to add animation tba
   eat()
   {
     let foodDistances = [];
     for(let i=0; i<foods.length; i++)
     {
       foodDistances.push(p5.Vector.sub(this.position,foods[i].position).mag());
-      //console.log(p5.Vector.sub(this.position,foods[i].position));
-      // if(this.color.levels[2] == 255)
-      // {
-      //   console.log(foodDistances[i]);
-      // }
       if(foodDistances[i]<4)
       {
-        foods[i].eaten();
+        foods[i].isEaten();
         this.fullness ++;
       }
     }

@@ -4,17 +4,17 @@ let totalAgents = 40;
 let agents = [];
 let targ1;
 
-let totalFood = 50;
+let totalFood = 20;
 let foods = [];
 let time = 0;
 let illumination;
-let bounds = 50;
+let bounds = 150;
 let aliveCreatures = totalAgents;
 
 function setup()
 {
   frameRate(60);
-  createCanvas(800,500);
+  createCanvas(1000,800);
   angleMode(RADIANS);
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
@@ -44,9 +44,8 @@ function draw()
     //agents[i].searchFor(agents);
     agents[i].searchFor(foods);
     agents[i].eat();
-
     // agents[i].seek(createVector(mouseX,mouseY));
-    if(!agents[i].hasTarget)
+    if(!agents[i].hasTarget && !agents[i].turning)
     {
         agents[i].wander();
     }
@@ -71,4 +70,10 @@ function draw()
     }
   }
   text(aliveCreatures,width-70,20);
+  text(time%PI,width-70,50);
+  ///Draw graph against time showing how many creatures are alive
+
+
+
+
 }
