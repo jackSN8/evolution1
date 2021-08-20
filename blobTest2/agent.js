@@ -3,7 +3,7 @@ class Agent
   constructor(size,maxs,maxf)
   {
     //Positions of the agent
-    this.position = createVector(random(100,700),random(100,400));
+    this.position = createVector(random(bounds,width-bounds),random(bounds,height-bounds));
     this.velocity = createVector(random(-0.5,0.5),random(-0.5,0.5));
     this.acceleration = createVector(0,0);
 
@@ -29,7 +29,7 @@ class Agent
     this.searchConeAngle = PI/4;
     this.searchConeRadius = 90;
 
-    this.fullness = 0;//How much food the agent has eaten
+    this.fullness = 0.5;//How much food the agent has eaten
     //For now 0 is nothing, 1 is survival rations, and 2 is reproduction rations
     this.dead = false;
 
@@ -68,13 +68,11 @@ class Agent
       this.die();
     }
     ///Creature progressively gets more hungry
-    this.fullness -= 1/1440;//At this rate, 1 food lasts a creature 2 days
+    this.fullness -= 1/1440;//At this rate, 1 food lasts a creature 1 day
     //If creature has loads of food, it asexualy reproduces
     if(this.fullness>=3)
     {
-      this.fullness--;
-      agents.push(new Agent(5,0.5,0.05));
-      totalAgents++;
+      this.giveBirth();
     }
 
 
@@ -124,6 +122,7 @@ class Agent
     steering.setMag(this.maxForce);
     this.applyForce(steering);
   }
+
 
   // // /////////Depricated wanda function, prbly sucks
   // // //wander using perlin noise to aim agent - currently not active
@@ -180,8 +179,6 @@ class Agent
 
 
 
-
-
   //Search for a certain physical object. Takes in array of object type -
   //object MUST have attribute 'object'.position
   searchFor(obArray)
@@ -192,10 +189,10 @@ class Agent
       rotate(this.theta);
 // <<<<<<< HEAD
       // //Code to visualize search cone
-      // fill(255,255,255,30);
-      // arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
-      // let searchLine = createVector(0,this.searchConeRadius);
-      // line(0,0,searchLine.x,searchLine.y);
+      fill(255,255,255,30);
+      arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
+      let searchLine = createVector(0,this.searchConeRadius);
+      line(0,0,searchLine.x,searchLine.y);
       //Then, find positions of all objects in array
       pop();
       let pots = [];
@@ -255,6 +252,13 @@ class Agent
     this.maxForce = 0;
     this.maxSpeed = 0;
     this.dead = true;
+  }
+
+  //Releases egg
+  giveBirth()//Genes tba , currently asexual function, but should work sexually later too
+  {
+    this.fullness--;
+    otherEntities.push(new egg(createVector(this.position.x,this.position.y)));
   }
 
   //stop the agent

@@ -4,8 +4,9 @@ let totalAgents = 40;
 let agents = [];
 let targ1;
 
-let totalFood = 20;
+let totalFood = 30;
 let foods = [];
+let otherEntities = [];
 let time = 0;
 let illumination;
 let bounds = 150;
@@ -19,7 +20,7 @@ function setup()
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
   {
-    agents.push(new Agent(5,0.5,0.05));
+    agents.push(new Agent(5,1.0,0.05));
   }
   for(let i=0; i<totalFood; i++)
   {
@@ -36,7 +37,7 @@ function draw()
   time +=(PI/720);//Time for a single day-night-day cycle is 1440 frames or 24 seconds
   illumination = cos(time)+1;
   agents[1].color = color(0,255,255);
-  for(let i=0; i<totalAgents; i++)
+  for(let i=0; i<agents.length; i++)
   {
     agents[i].update();
     agents[i].avoidWalls(bounds,width-bounds,bounds,height-bounds);
@@ -47,12 +48,25 @@ function draw()
     // agents[i].seek(createVector(mouseX,mouseY));
     if(!agents[i].hasTarget && !agents[i].turning)
     {
-        agents[i].wander();
+        //agents[i].wander();
+    }
+    if(agents[i].dead)
+    {
+      agents.splice(i,1);
+      totalAgents--;
     }
   }
   for(let i=0; i<totalFood; i++)
   {
     foods[i].display();
+  }
+  for(let i=0; i<otherEntities.length; i++)
+  {
+    otherEntities[i].update();
+    if(otherEntities[i].dead)
+    {
+      otherEntities.splice(i,1);
+    }
   }
   fill(20*illumination,20*illumination,95*illumination,127);
   noStroke();
