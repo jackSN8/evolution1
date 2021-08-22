@@ -14,7 +14,7 @@ class particle
   update()
   {
     //As particle gets older, fade it from existance
-    this.age+=(PI/720);
+    this.age+=(PI/720)*timeDilation;
     this.color = color(255,255,255,map(this.age,0,this.lifespan,127,0));
     //Kill it once it fades to nothing, then remove from screen
     if(this.age>=this.lifespan)

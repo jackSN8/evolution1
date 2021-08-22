@@ -2,19 +2,26 @@ class Agent
 {
   constructor(size,maxs,maxf)
   {
-    //Positions of the agent
+    //Positions of the agent for physics engine, should not be directly affeceted ever really
     this.position = createVector(random(bounds,width-bounds),random(bounds,height-bounds));
     this.velocity = createVector(random(-0.5,0.5),random(-0.5,0.5));
     this.acceleration = createVector(0,0);
 
-    ////Agent specs
-    this.maxSpeed = maxs;
-    //Normal movement speed.
+    ////Agent DNA
+
+
+    //this.DNA = dna;
+    /////DNA structure
+    //the value stored in the DNA is pared with the variable name that
+    //said value needs to be in in an array in the DNA array
+    //Ie this.DNA is a 2d array, each 1d array stored inside stores some value(s) for a certain
+    //paremeter like size, color etc, + the name of that paremeter
+
+    this.maxSpeed = maxs*timeDilation;//Normal movement speed.
     //Other speeds such as the minimum cutoff speed are
     //ratios of this maxSpeed, so it affects everything
 
-    this.maxForce = maxf;
-    //Max speed to changes to velocity with
+    this.maxForce = maxf*timeDilation;//Max speed to changes to velocity with
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
@@ -22,16 +29,20 @@ class Agent
     this.mass = 1;
     this.width = size;
     this.height = size*2.5;
-    this.theta = this.velocity.heading()-PI/2;
+
     this.color = color(255,0,0);
 
     //Stores info about search cone
     this.searchConeAngle = PI/4;
     this.searchConeRadius = 90;
 
+
+    /////Other variables non gene specific
     this.fullness = 0.5;//How much food the agent has eaten
     //For now 0 is nothing, 1 is survival rations, and 2 is reproduction rations
     this.dead = false;
+    this.theta = this.velocity.heading()-PI/2;//heading, not sure why -PI/2 rad since
+    //I seem to have to re-add it elsewhere
 
 
     this.hasTarget = false;
@@ -68,7 +79,7 @@ class Agent
       this.die();
     }
     ///Creature progressively gets more hungry
-    this.fullness -= 1/1440;//At this rate, 1 food lasts a creature 1 day
+    this.fullness -= 1/1440*timeDilation;//At this rate, 1 food lasts a creature 1 day
     //If creature has loads of food, it asexualy reproduces
     if(this.fullness>=3)
     {
@@ -189,10 +200,10 @@ class Agent
       rotate(this.theta);
 // <<<<<<< HEAD
       // //Code to visualize search cone
-      fill(255,255,255,30);
-      arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
-      let searchLine = createVector(0,this.searchConeRadius);
-      line(0,0,searchLine.x,searchLine.y);
+      // fill(255,255,255,30);
+      // arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
+      // let searchLine = createVector(0,this.searchConeRadius);
+      // line(0,0,searchLine.x,searchLine.y);
       //Then, find positions of all objects in array
       pop();
       let pots = [];

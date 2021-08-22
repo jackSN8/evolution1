@@ -12,7 +12,7 @@ class egg
   update()
   {
     this.display();
-    this.age+=(PI/720);
+    this.age+=(PI/720)*timeDilation;
     //Once old enough - 1 full day in this case, creature hatches
     if(this.age>=PI && !this.dead)
     {
