@@ -1,29 +1,29 @@
 
 
-let totalAgents = 40;
+let totalAgents = 20;
 let agents = [];
 let targ1;
 
-let totalFood = 20;
+let totalFood = 6;
 let foods = [];
 let otherEntities = [];
 let time = 0;
 let illumination;
-let bounds = 150;
+let bounds = 70;
 let aliveCreatures = totalAgents;
-let timeDilation = 5;//Factor to speed up everything by, all functions of time are modified by this
+let timeDilation = 1;//Factor to speed up everything by, all functions of time are modified by this
 
 
 
 function setup()
 {
   frameRate(60);
-  createCanvas(1000,800);
+  createCanvas(500,400);
   angleMode(RADIANS);
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
   {
-    agents.push(new Agent(5,1.0,0.05));
+    agents.push(new Agent(5,1.0,0.05,formGenericDna()));
   }
   for(let i=0; i<totalFood; i++)
   {
@@ -72,7 +72,7 @@ function draw()
       otherEntities.splice(i,1);
     }
   }
-  fill(20*illumination,20*illumination,95*illumination,127);
+  fill(20*illumination,20*illumination,95*illumination,60);
   noStroke();
   rect(bounds,bounds,width-bounds*2,height-bounds*2);
   stroke(127);
@@ -105,4 +105,20 @@ function formGenericDna()
   dna.push(['searchConeAngle',random(PI/8,PI/3)]);
   dna.push(['searchConeRadius',random(40,150)]);
   return dna;
+}
+
+//Finds a value against a key in a 2d array
+function findDictPos(key,array)
+{
+  let found = false;
+  for(let i=0; i<array.length; i++)
+  {
+    if(!found && array[i][0]==key)
+    {
+      found = true;
+      return array[i][1];
+    }
+  }
+  console.log("error");
+  return("No Value in Array corresponds to key.");
 }

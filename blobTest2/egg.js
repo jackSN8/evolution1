@@ -1,7 +1,8 @@
 class egg
 {
-  constructor(pos)
+  constructor(pos,dna)
   {
+    this.dna = dna;
     this.position = pos;
     this.age = 0;
     this.color = color(255,0,0);
@@ -27,7 +28,7 @@ class egg
 
   hatch()
   {
-    agents.push(new Agent(5,1.0,0.05));
+    agents.push(new Agent(5,1.0,0.05,this.dna));
     totalAgents++;
     agents[totalAgents-1].position.set(this.position);
     this.dead = true;

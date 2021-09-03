@@ -1,6 +1,6 @@
-class Agent
+       class Agent
 {
-  constructor(size,maxs,maxf)
+  constructor(size,maxs,maxf,dna)
   {
     //Positions of the agent for physics engine, should not be directly affeceted ever really
     this.position = createVector(random(bounds,width-bounds),random(bounds,height-bounds));
@@ -10,31 +10,31 @@ class Agent
     ////Agent DNA
 
 
-    //this.DNA = dna;
+    this.dna = dna;
     /////DNA structure
     //the value stored in the DNA is pared with the variable name that
     //said value needs to be in in an array in the DNA array
     //Ie this.DNA is a 2d array, each 1d array stored inside stores some value(s) for a certain
     //paremeter like size, color etc, + the name of that paremeter
 
-    this.maxSpeed = maxs*timeDilation;//Normal movement speed.
+    this.maxSpeed = findDictPos('maxS',dna)*timeDilation;//Normal movement speed.
     //Other speeds such as the minimum cutoff speed are
     //ratios of this maxSpeed, so it affects everything
 
-    this.maxForce = maxf*timeDilation;//Max speed to changes to velocity with
+    this.maxForce = findDictPos('maxF',dna)*timeDilation;//Max speed to changes to velocity with
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
     this.id = int(random(0,2500));
-    this.mass = 1;
-    this.width = size;
-    this.height = size*2.5;
+    this.mass = findDictPos('mass',dna);
+    this.width = findDictPos('size',dna);
+    this.height = findDictPos('size',dna)*2.5;
 
-    this.color = color(255,0,0);
+    this.color = findDictPos('color',dna);
 
     //Stores info about search cone
-    this.searchConeAngle = PI/4;
-    this.searchConeRadius = 90;
+    this.searchConeAngle = findDictPos('searchConeAngle',dna);
+    this.searchConeRadius = findDictPos('searchConeRadius',dna);
 
 
     /////Other variables non gene specific
@@ -43,8 +43,6 @@ class Agent
     this.dead = false;
     this.theta = this.velocity.heading()-PI/2;//heading, not sure why -PI/2 rad since
     //I seem to have to re-add it elsewhere
-
-
     this.hasTarget = false;
     this.turning = false;
     //dumb variable to store if the agent has recently been turning
@@ -269,7 +267,7 @@ class Agent
   giveBirth()//Genes tba , currently asexual function, but should work sexually later too
   {
     this.fullness--;
-    otherEntities.push(new egg(createVector(this.position.x,this.position.y)));
+    otherEntities.push(new egg(createVector(this.position.x,this.position.y),this.dna));
   }
 
   //stop the agent
