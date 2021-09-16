@@ -1,4 +1,4 @@
-       class Agent
+class Agent
 {
   constructor(size,maxs,maxf,dna)
   {
@@ -17,26 +17,27 @@
     //Ie this.DNA is a 2d array, each 1d array stored inside stores some value(s) for a certain
     //paremeter like size, color etc, + the name of that paremeter
 
-    this.maxSpeed = findDictPos('maxS',dna)*timeDilation;//Normal movement speed.
+    this.maxSpeed = findDictPos('maxS',dna,1)*timeDilation;//Normal movement speed.
     //Other speeds such as the minimum cutoff speed are
     //ratios of this maxSpeed, so it affects everything
 
-    this.maxForce = findDictPos('maxF',dna)*timeDilation;//Max speed to changes to velocity with
+    this.maxForce = findDictPos('maxF',dna,1)*timeDilation;//Max speed to changes to velocity with
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
     this.id = int(random(0,2500));
-    this.mass = findDictPos('mass',dna);
-    this.width = findDictPos('size',dna);
-    this.height = findDictPos('size',dna)*2.5;
-
-    this.color = findDictPos('color',dna);
-
+    this.mass = findDictPos('mass',dna,1);
+    this.width = findDictPos('size',dna,1);
+    this.height = findDictPos('size',dna,1)*2.5;
+    this.maxFood = findDictPos('size',dna,1);
+    this.color = findDictPos('color',dna,1);
     //Stores info about search cone
-    this.searchConeAngle = findDictPos('searchConeAngle',dna);
-    this.searchConeRadius = findDictPos('searchConeRadius',dna);
+    this.searchConeAngle = findDictPos('searchConeAngle',dna,1);
+    this.searchConeRadius = findDictPos('searchConeRadius',dna,1);
 
-
+    this.energyConsumption = 1/1440;//Amount of energy confsumed per frame
+    this.calculateEnergyConsumption();
+    console.log(this.searchConeAngle);
     /////Other variables non gene specific
     this.fullness = 0.5;//How much food the agent has eaten
     //For now 0 is nothing, 1 is survival rations, and 2 is reproduction rations
@@ -77,7 +78,7 @@
       this.die();
     }
     ///Creature progressively gets more hungry
-    this.fullness -= 1/1440*timeDilation;//At this rate, 1 food lasts a creature 1 day
+    this.fullness -= this.energyConsumption*timeDilation;//At this rate, 1 food lasts a creature 1 day
     //If creature has loads of food, it asexualy reproduces
     if(this.fullness>=3)
     {
@@ -85,6 +86,13 @@
     }
 
 
+  }
+
+  calculateEnergyConsumption()
+  {
+    this.energyConsumption *=this.width*0.2;
+    this.energyConsumption *= this.maxSpeed;
+    this.energyConsumption += abs(this.searchConeAngle)*1/1440;
   }
 
   display()
@@ -115,6 +123,11 @@
     fill(255);
   }
 
+
+  findEnergyConsumption()
+  {
+    
+  }
 
   ///Function to direct agent towards a target object
   seek(target)

@@ -1,10 +1,10 @@
 
 
-let totalAgents = 20;
+let totalAgents = 50;
 let agents = [];
 let targ1;
 
-let totalFood = 6;
+let totalFood = 25;
 let foods = [];
 let otherEntities = [];
 let time = 0;
@@ -18,7 +18,7 @@ let timeDilation = 1;//Factor to speed up everything by, all functions of time a
 function setup()
 {
   frameRate(60);
-  createCanvas(500,400);
+  createCanvas(800,700);
   angleMode(RADIANS);
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
@@ -97,18 +97,18 @@ function draw()
 function formGenericDna()
 {
   let dna = [];
-  dna.push(['maxS',random(0.6,1.4)]);
-  dna.push(['maxF',random(0.03,0.07)]);
-  dna.push(['size',random(3,7)]);
-  dna.push(['mass',random(0.7,1.3)]);
+  dna.push(['maxS',random(0.6,1.4),0.7,1.4,0.3]);
+  dna.push(['maxF',random(0.03,0.07),0.03,0.07,0.03]);
+  dna.push(['size',random(3,7),3,7,3]);
+  dna.push(['mass',random(0.7,1.3),0.7,1.3,0.1]);
+  dna.push(['searchConeAngle',random(PI/8,PI/3),PI/8,PI/3,PI/16]);
+  dna.push(['searchConeRadius',random(40,150),40,150,10]);
   dna.push(['color',color(random(0,255),random(0,255),random(0,255))]);
-  dna.push(['searchConeAngle',random(PI/8,PI/3)]);
-  dna.push(['searchConeRadius',random(40,150)]);
   return dna;
 }
 
 //Finds a value against a key in a 2d array
-function findDictPos(key,array)
+function findDictPos(key,array,num)
 {
   let found = false;
   for(let i=0; i<array.length; i++)
@@ -116,7 +116,7 @@ function findDictPos(key,array)
     if(!found && array[i][0]==key)
     {
       found = true;
-      return array[i][1];
+      return array[i][num];
     }
   }
   console.log("error");

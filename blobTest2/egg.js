@@ -28,6 +28,7 @@ class egg
 
   hatch()
   {
+    this.mutate();
     agents.push(new Agent(5,1.0,0.05,this.dna));
     totalAgents++;
     agents[totalAgents-1].position.set(this.position);
@@ -38,6 +39,27 @@ class egg
       otherEntities.push(new particle(createVector(this.position.x,this.position.y)));
     }
 
+  }
+
+  mutate()
+  {//Loop through dna, not to full length though due to color gene not mutating
+    for(let i=0; i<this.dna.length-1; i++)
+    {
+      if(int(random(0,10))==1)
+      {
+        if(this.dna[i][1]>this.dna[i][2] && this.dna[i][1]<this.dna[i][3])
+        {
+          if(int(random(0,2)==1))
+          {
+            this.dna[i][1] += this.dna[i][4];
+          }
+          else
+          {
+            this.dna[i][1] -= this.dna[i][4];
+          }
+        }
+      }
+    }
   }
 
 
