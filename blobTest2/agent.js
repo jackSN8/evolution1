@@ -32,7 +32,7 @@ class Agent
     this.maxFood = findDictPos('size',dna,1);
     this.color = findDictPos('color',dna,1);
     //Stores info about search cone
-    this.searchConeAngle = findDictPos('searchConeAngle',dna,1);
+    this.searchConeAngle = findDictPos('searchConeAngle',dna,1)*findDictPos('size',dna,1)*0.2;
     this.searchConeRadius = findDictPos('searchConeRadius',dna,1);
 
     this.energyConsumption = 1/1440;//Amount of energy confsumed per frame
