@@ -26,14 +26,15 @@ class Agent
     //which makes sense but this can do 180 in 0 seconds when still
 
     this.id = int(random(0,2500));
-    this.mass = findDictPos('mass',dna,1);
+    this.mass = findDictPos('mass',dna,1);  
     this.width = findDictPos('size',dna,1);
     this.height = findDictPos('size',dna,1)*2.5;
     this.maxFood = findDictPos('size',dna,1);
     this.color = findDictPos('color',dna,1);
     //Stores info about search cone
     this.searchConeAngle = findDictPos('searchConeAngle',dna,1)*findDictPos('size',dna,1)*0.2;
-    this.searchConeRadius = findDictPos('searchConeRadius',dna,1);
+    this.searchConeRadius = findDictPos('searchConeRadius',dna,1)*findDictPos('size',dna,1)*0.2;
+    
 
     this.energyConsumption = 1/1440;//Amount of energy confsumed per frame
     this.calculateEnergyConsumption();
@@ -78,7 +79,7 @@ class Agent
       this.die();
     }
     ///Creature progressively gets more hungry
-    this.fullness -= this.energyConsumption*timeDilation;//At this rate, 1 food lasts a creature 1 day
+    this.fullness -= this.energyConsumption;//At this rate, 1 food lasts a creature 1 day
     //If creature has loads of food, it asexualy reproduces
     if(this.fullness>=3)
     {
@@ -93,6 +94,8 @@ class Agent
     this.energyConsumption *=this.width*0.2;
     this.energyConsumption *= this.maxSpeed;
     this.energyConsumption += abs(this.searchConeAngle)*1/1440;
+    this.energyConsumption += 1/1440;
+    //this.energyConsumption *= timeDilation/3;
   }
 
   display()
@@ -142,6 +145,7 @@ class Agent
   {
     let steering = desired.sub(this.velocity);
     steering.setMag(this.maxForce);
+    //steering.mult(timeDilation);
     this.applyForce(steering);
   }
 
@@ -255,7 +259,7 @@ class Agent
     for(let i=0; i<foods.length; i++)
     {
       foodDistances.push(p5.Vector.sub(this.position,foods[i].position).mag());
-      if(foodDistances[i]<4)
+      if(foodDistances[i]<this.width)
       {
         foods[i].isEaten();
         this.fullness ++;
@@ -280,7 +284,7 @@ class Agent
   giveBirth()//Genes tba , currently asexual function, but should work sexually later too
   {
     this.fullness--;
-    otherEntities.push(new egg(createVector(this.position.x,this.position.y),this.dna));
+    otherEntities.push(new egg(createVector(this.position.x,this.position.y),this.dna.stringify));
   }
 
   //stop the agent

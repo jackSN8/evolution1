@@ -1,10 +1,10 @@
 
 
-let totalAgents = 50;
+let totalAgents = 20;
 let agents = [];
 let targ1;
 
-let totalFood = 25;
+let totalFood = 15;
 let foods = [];
 let otherEntities = [];
 let time = 0;
@@ -18,7 +18,7 @@ let timeDilation = 1;//Factor to speed up everything by, all functions of time a
 function setup()
 {
   frameRate(60);
-  createCanvas(800,700);
+  createCanvas(500,400);
   angleMode(RADIANS);
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
