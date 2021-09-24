@@ -1,4 +1,4 @@
-
+import R from "ramda"
 
 let totalAgents = 20;
 let agents = [];

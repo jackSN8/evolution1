@@ -1,3 +1,6 @@
+// var _ = require('lodash');
+
+
 class Agent
 {
   constructor(size,maxs,maxf,dna)
@@ -284,7 +287,7 @@ class Agent
   giveBirth()//Genes tba , currently asexual function, but should work sexually later too
   {
     this.fullness--;
-    otherEntities.push(new egg(createVector(this.position.x,this.position.y),this.dna.stringify));
+    otherEntities.push(new egg(createVector(this.position.x,this.position.y),(this.dna)));
   }
 
   //stop the agent

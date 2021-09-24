@@ -1,6 +1,6 @@
 class egg
 {
-  constructor(pos,dna.parse())
+  constructor(pos,dna)
   {
     this.dna = dna;
     this.position = pos;
