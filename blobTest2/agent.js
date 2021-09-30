@@ -41,7 +41,7 @@ class Agent
 
     this.energyConsumption = 1/1440;//Amount of energy confsumed per frame
     this.calculateEnergyConsumption();
-    console.log(this.searchConeAngle);
+    // console.log(this.color);
     /////Other variables non gene specific
     this.fullness = 0.5;//How much food the agent has eaten
     //For now 0 is nothing, 1 is survival rations, and 2 is reproduction rations
@@ -107,7 +107,7 @@ class Agent
     {
       this.theta = this.velocity.heading()-PI/2;
     }
-    fill(this.color);
+    fill(this.color[0],this.color[1],this.color[2]);
 
     //Agent visualisation code - currently draws it as triangle
     //facing the direction of movement
@@ -287,7 +287,7 @@ class Agent
   giveBirth()//Genes tba , currently asexual function, but should work sexually later too
   {
     this.fullness--;
-    otherEntities.push(new egg(createVector(this.position.x,this.position.y),(this.dna)));
+    otherEntities.push(new egg(createVector(this.position.x,this.position.y),(deepClone(this.dna))));
   }
 
   //stop the agent

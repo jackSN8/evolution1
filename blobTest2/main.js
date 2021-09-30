@@ -1,4 +1,4 @@
-import R from "ramda"
+
 
 let totalAgents = 20;
 let agents = [];
@@ -97,13 +97,14 @@ function draw()
 function formGenericDna()
 {
   let dna = [];
+  let color = [random(0,255),random(0,255),random(0,255)];
   dna.push(['maxS',random(0.6,1.4),0.7,1.4,0.3]);
-  dna.push(['maxF',random(0.03,0.07),0.03,0.07,0.03]);
+  dna.push(['maxF',random(0.05,0.09),0.03,0.07,0.03]);
   dna.push(['size',random(3,7),3,7,3]);
   dna.push(['mass',random(0.7,1.3),0.7,1.3,0.1]);
   dna.push(['searchConeAngle',random(PI/8,PI/3),PI/8,PI/3,PI/16]);
   dna.push(['searchConeRadius',random(40,150),40,150,10]);
-  dna.push(['color',color(random(0,255),random(0,255),random(0,255))]);
+  dna.push(['color',color]);///Color must be last
   return dna;
 }
 
@@ -121,4 +122,29 @@ function findDictPos(key,array,num)
   }
   console.log("error");
   return("No Value in Array corresponds to key.");
+}
+
+function deepClone(obj, format) {
+  var refs = arguments.length <= 2 || arguments[2] === undefined ? new Map() : arguments[2];
+
+  var cloned = refs.get(obj);
+  if (cloned) return cloned;
+  if (Array.isArray(obj)) {
+    var _clone = [];
+    refs.set(obj, _clone);
+    for (var i = 0; i < obj.length; i++) {
+      _clone[i] = deepClone(obj[i], format, refs);
+    }
+    return _clone;
+  }
+  if (obj instanceof Date) return new Date(obj.valueOf());
+  if (!(obj instanceof Object)) return obj;
+  var clone = {};
+  refs.set(obj, clone);
+  var keys = Object.keys(obj);
+  for (var i = 0; i < keys.length; i++) {
+    var key = format ? format(keys[i]) : keys[i];
+    clone[key] = deepClone(obj[keys[i]], format, refs);
+  }
+  return clone;
 }
