@@ -134,6 +134,58 @@ class Agent
   {
     
   }
+  //////////////AI 
+
+  ///They need to eat eachother
+  eatOthers(obArray)
+  {
+    ///Uses search for code, but only on significantly smaller creatures
+    //create a search cone in front of the agent
+      push();
+      translate(this.position.x,this.position.y);
+      rotate(this.theta);
+// <<<<<<< HEAD
+      // //Code to visualize search cone
+      // fill(255,255,255,30);
+      // arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
+      // let searchLine = createVector(0,this.searchConeRadius);
+      // line(0,0,searchLine.x,searchLine.y);
+      //Then, find positions of all objects in array
+      pop();
+      let pots = [];
+      let wids = [];
+      for(let i=0; i<obArray.length; i++)
+      {
+        pots.push(obArray[i].position);
+        wids.push(obArray[i].width);
+        //Find vector from target to agent
+        let vecRel = p5.Vector.sub(pots[i],(this.position));
+        // //Tempory code to visualise that vector
+        // push();
+        // translate(this.position.x,this.position.y);
+        // line(0,0,vecRel.x,vecRel.y);
+        // pop();
+
+        //Find angle of target relative to current heading of agent
+        let tgtHeading = vecRel.heading();
+        let headingDif = this.velocity.heading()-tgtHeading;
+        //Find distance of target relative to current pos of agent
+        let posDif = p5.Vector.dist(pots[i],this.position);
+        let widthDif = abs(this.width)/wids[i];
+        //Check if target is in range and is small enough
+        if(abs(headingDif)<this.searchConeAngle/2 && posDif<this.searchConeRadius/2 && widthDif>1.5)
+        {        
+          this.hasTarget = true;
+          this.seek(pots[i]);          
+        }
+        else
+        {
+          this.hasTarget = false;///Holy fuck this is bad code, need to merge this varable w the avoid walls one tba
+        }
+      }
+  }
+
+
 
   ///Function to direct agent towards a target object
   seek(target)
@@ -256,7 +308,7 @@ class Agent
   //Eat food -- agent always eats food when it runs into it,
   //Maybe changed down the line
   //Prbly want to add animation tba
-  eat()
+  eatPlants()
   {
     let foodDistances = [];
     for(let i=0; i<foods.length; i++)
@@ -265,6 +317,24 @@ class Agent
       if(foodDistances[i]<this.width)
       {
         foods[i].isEaten();
+        this.fullness ++;
+      }
+    }
+    
+  }
+
+  eatAgents()
+  {
+    let agentDistances = [];
+    let wids = [];
+    for(let i=0; i<agents.length; i++)
+    {
+      agentDistances.push(p5.Vector.sub(this.position,agents[i].position).mag());
+      wids.push(agents[i].width);
+      let widthRatio = this.width/wids[i]
+      if(agentDistances[i]<this.width && agentDistances[i]>0 && widthRatio>1.5)
+      {
+        agents[i].die();
         this.fullness ++;
       }
     }

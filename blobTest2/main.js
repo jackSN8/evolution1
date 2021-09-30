@@ -1,10 +1,10 @@
 
 
-let totalAgents = 20;
+let totalAgents = 30;
 let agents = [];
 let targ1;
 
-let totalFood = 15;
+let totalFood = 40;
 let foods = [];
 let otherEntities = [];
 let time = 0;
@@ -18,7 +18,7 @@ let timeDilation = 1;//Factor to speed up everything by, all functions of time a
 function setup()
 {
   frameRate(60);
-  createCanvas(500,400);
+  createCanvas(800,800);
   angleMode(RADIANS);
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
@@ -48,7 +48,9 @@ function draw()
     agents[i].avoidOthers(agents,10);
     //agents[i].searchFor(agents);
     agents[i].searchFor(foods);
-    agents[i].eat();
+    agents[i].eatAgents(agents);
+    agents[i].eatPlants();
+    agents[i].eatOthers(agents);
     // agents[i].seek(createVector(mouseX,mouseY));
     if(!agents[i].hasTarget && !agents[i].turning)
     {
@@ -72,10 +74,8 @@ function draw()
       otherEntities.splice(i,1);
     }
   }
-  fill(20*illumination,20*illumination,95*illumination,60);
-  noStroke();
-  rect(bounds,bounds,width-bounds*2,height-bounds*2);
-  stroke(127);
+  drawBlob();
+  
 
   ////Write to screen how many alive creatures there are
   //Count alive agents
@@ -92,6 +92,49 @@ function draw()
   ///Draw graph against time showing how many creatures are alive
 }
 
+function drawBlob()
+{
+  fill(20*illumination,20*illumination,95*illumination,60);
+  noStroke();
+  beginShape();
+  vertex(width/2,30);
+  vertex(width/2,80);
+  endShape();
+  //Drawing main canvas, now going to be a perlin circle (cell type object)
+  //Perlin noise is 2d function of time and angle
+  //circle(width/2,height/2,(width-bounds)/1.2);
+  const fixedRadius = (width-bounds)/1.2;
+  push();
+  translate(width/2,height/2);
+  beginShape();
+  for(let i=0; i<TWO_PI; i+=PI/180)
+  {
+    let theta = i;
+    if(theta>PI)
+    {
+      theta=TWO_PI-i;
+    }
+
+    let tempRadius = fixedRadius*noise(theta/3,time/2);
+    let pos = polarToCartesian(tempRadius,i);
+    vertex(pos.x,pos.y);
+  }
+
+  endShape(CLOSE);
+  pop();
+
+  stroke(127);
+}
+
+function polarToCartesian(radius,theta)
+{
+  let xPos = radius*cos(theta);
+  let yPos = radius*sin(theta);
+  return createVector(xPos,yPos);
+}
+
+
+
 //Forms an initial DNA for the unevolved agents. DNA is designed to tolerate having new info so there
 // may be new evolved charactiristics, not in this function
 function formGenericDna()
@@ -104,7 +147,7 @@ function formGenericDna()
   dna.push(['mass',random(0.7,1.3),0.7,1.3,0.1]);
   dna.push(['searchConeAngle',random(PI/8,PI/3),PI/8,PI/3,PI/16]);
   dna.push(['searchConeRadius',random(40,150),40,150,10]);
-  dna.push(['color',color]);///Color must be last
+  dna.push(['color',color]);///Color must be last due to mutate function excluding it
   return dna;
 }
 
