@@ -37,7 +37,10 @@ class Agent
     //Stores info about search cone
     this.searchConeAngle = findDictPos('searchConeAngle',dna,1)*findDictPos('size',dna,1)*0.2;
     this.searchConeRadius = findDictPos('searchConeRadius',dna,1)*findDictPos('size',dna,1)*0.2;
-    
+    // this.agressiveness
+    // this.courage
+    // this.stupidity
+    // this.gangster
 
     this.energyConsumption = 1/1440;//Amount of energy confsumed per frame
     this.calculateEnergyConsumption();
@@ -185,6 +188,7 @@ class Agent
       }
   }
 
+      
 
 
   ///Function to direct agent towards a target object

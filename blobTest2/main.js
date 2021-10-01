@@ -115,7 +115,7 @@ function drawBlob()
       theta=TWO_PI-i;
     }
 
-    let tempRadius = fixedRadius*noise(theta/3,time/2);
+    let tempRadius = fixedRadius*noise(theta/2,time/8);
     let pos = polarToCartesian(tempRadius,i);
     vertex(pos.x,pos.y);
   }
