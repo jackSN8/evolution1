@@ -1,0 +1,11 @@
+NEED WAY TO ADD GENERIC SIGNFICANT MUTATION
+eg, growing a nose
+each creature is made of blocks:
+-sensing
+:eg b/w eyes, color eyes, touch, 
+-digestion
+:amount of storable food
+-reproduction
+:random reproduction tendencies/perlin 
+-behavior
+:eg tending towards certain areas, eating others, teaming up in packs, spreading out
