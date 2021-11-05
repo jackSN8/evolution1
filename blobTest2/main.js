@@ -7,6 +7,7 @@ let targ1;
 let totalFood = 40;
 let foods = [];
 let otherEntities = [];
+let totalOtherStuff = 10;
 let time = 0;
 let illumination;
 let bounds = 70;
@@ -27,7 +28,23 @@ function setup()
   }
   for(let i=0; i<totalFood; i++)
   {
-    foods.push(new food(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
+    let r= int(random(0,10));
+    if(r<7)
+    {
+      foods.push(new food(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
+    }
+    else if(r<10&&r>6)
+    {
+      foods.push(new largeFood(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
+    }  
+    // else
+    // {
+    //   foods.push(new lavaPool(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
+    // }  
+  }
+  for(let i=0; i<totalOtherStuff; i++)
+  {
+    otherEntities.push(new lavaPool(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
   }
   //agents[10].color = (0,255,0);
   agents[1].color = color(0,255,255);
@@ -65,6 +82,10 @@ function draw()
   for(let i=0; i<totalFood; i++)
   {
     foods[i].display();
+  }
+  for(let i=0; i<totalOtherStuff; i++)
+  {
+    otherEntities[i].display();
   }
   for(let i=0; i<otherEntities.length; i++)
   {
