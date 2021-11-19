@@ -21,8 +21,8 @@ class DNA
   ///Function to calculate the fitness of a single word (words are
   ///called DNAs which is a bit wierd.) Checks how many characters
   ///are the same as a target. Obviousely in the real world fitness
-  ///is essentially a function of how much you fuck, whereas in this
-  ///case this determines how much the DNA gets to fuck
+  ///is essentially a function of how much you reproduce, whereas in this
+  ///case this determines how much the DNA gets to reproduce
   fitnessCalc(tTarget)
   {
     this.target = tTarget;

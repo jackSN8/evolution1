@@ -43,7 +43,7 @@ function draw()
     popFitness[i] /= totalNum;
   }
     //console.log(popFitness[2]);
-  ///Then make them do the sex
+  ///Then make them do the repduction
   //Chance of them being a parent is the fitness, so create mating pool
   //with the fitness being the amount of times in pool
   matingPool = makePool(population)
