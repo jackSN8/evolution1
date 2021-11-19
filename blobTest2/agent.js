@@ -68,6 +68,14 @@ class Agent
     this.wanderSmoothing = 100;//The higher the number the smoother and less
     //random seeming the wandering will be
 
+    //Array to store how attrictive it finds other agents
+    this.agentAttractivenesses = [];
+    for(let i=0; i<agents.length; i++)
+    {
+      this.agentAttractivenesses.push(int(random(0,100)));
+    }
+
+
 
   }
   update()
@@ -91,6 +99,7 @@ class Agent
     {
       this.giveBirth();
     }
+    this.haveSex();
 
 
   }
@@ -342,6 +351,25 @@ class Agent
         this.fullness ++;
       }
     }
+  }
+
+  //Sexual reproduction occours when two agents are of similar size and speed,
+  //plus some randomly assinged personal attractiveness of each other agent 
+  //Right now sex produces two children, one with one the parents genes and one with the other
+  //To be potentially changed to more realistic system
+  haveSex()
+  {
+    let agentDistances = [];
+    for(let i=0; i<agents.length; i++)
+    {
+      agentDistances.push(p5.Vector.sub(this.position,agents[i].position).mag());
+      if(agentDistances[i]<this.width && this.agentAttractivenesses[i]>0 && this.fullness>2)
+      {
+        this.giveBirth();
+        this.fullness--;
+      }
+    }
+    
   }
 
   //Kills the agent according to any death scenario
