@@ -4,7 +4,7 @@ let totalAgents = 30;
 let agents = [];
 let targ1;
 
-let totalFood = 40;
+let totalFood = 50;
 let foods = [];
 let otherEntities = [];
 let totalOtherStuff = 10;
@@ -14,7 +14,8 @@ let bounds = 70;
 let aliveCreatures = totalAgents;
 let timeDilation = 1;//Factor to speed up everything by, all functions of time are modified by this
 
-
+//creating a grid to store temperatures around the Map
+let tempGrid = [];
 
 function setup()
 {
@@ -48,6 +49,15 @@ function setup()
   }
   //agents[10].color = (0,255,0);
   agents[1].color = color(0,255,255);
+  for(let i=0; i<width; i+=10)
+  {
+    tempGrid[i]=[]
+    tempGrid[i].push(new Array(height));
+    for(let j=0; j<height; j+=10)
+    {
+      tempGrid[i][j] = noise(i/10,j/10);
+    }
+  }
 }
 
 function draw()
@@ -57,7 +67,15 @@ function draw()
   circle(targ1.x,targ1.y,30);
   time +=(PI/720)*timeDilation;//Time for a single day-night-day cycle is 1440 frames or 24 seconds
   illumination = cos(time)+1;
-
+  for(let i=0; i<width; i+=10)
+  {
+    for(let j=0; j<height; j+=10)
+    {
+      noStroke();
+      fill(0,0,255,tempGrid[i][j]*255*illumination);
+      rect(i,j,10,10);
+    }
+  }
   for(let i=0; i<agents.length; i++)
   {
     agents[i].update();
@@ -95,7 +113,7 @@ function draw()
       otherEntities.splice(i,1);
     }
   }
-  drawBlob();
+  //drawBlob();
   
 
   ////Write to screen how many alive creatures there are
