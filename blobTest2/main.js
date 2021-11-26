@@ -1,26 +1,29 @@
 
 
-let totalAgents = 30;
+let totalAgents = 5;
 let agents = [];
 let targ1;
 
-let totalFood = 50;
+let totalFood = 40;
 let foods = [];
 let otherEntities = [];
-let totalOtherStuff = 10;
+let totalOtherStuff = 3;
 let time = 0;
 let illumination;
 let bounds = 70;
 let aliveCreatures = totalAgents;
 let timeDilation = 1;//Factor to speed up everything by, all functions of time are modified by this
+let perlinGridSize = 10;
+
 
 //creating a grid to store temperatures around the Map
 let tempGrid = [];
+let tempGridVals = [];
 
 function setup()
 {
   frameRate(60);
-  createCanvas(800,800);
+  createCanvas(600,600);
   angleMode(RADIANS);
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
@@ -49,13 +52,22 @@ function setup()
   }
   //agents[10].color = (0,255,0);
   agents[1].color = color(0,255,255);
-  for(let i=0; i<width; i+=10)
+  for(let i=0; i<width; i+=perlinGridSize)
   {
     tempGrid[i]=[]
     tempGrid[i].push(new Array(height));
-    for(let j=0; j<height; j+=10)
+    for(let j=0; j<height; j+=perlinGridSize)
     {
       tempGrid[i][j] = noise(i/10,j/10);
+    }
+  }
+  for(let i=0; i<width; i++)
+  {
+    tempGridVals[i]=[]
+    tempGridVals[i].push(new Array(height));
+    for(let j=0; j<height; j++)
+    {
+      tempGridVals[i][j] = noise(i/10,j/10);
     }
   }
 }
@@ -67,9 +79,9 @@ function draw()
   circle(targ1.x,targ1.y,30);
   time +=(PI/720)*timeDilation;//Time for a single day-night-day cycle is 1440 frames or 24 seconds
   illumination = cos(time)+1;
-  for(let i=0; i<width; i+=10)
+  for(let i=0; i<width; i+=perlinGridSize)
   {
-    for(let j=0; j<height; j+=10)
+    for(let j=0; j<height; j+=perlinGridSize)
     {
       noStroke();
       fill(0,0,255,tempGrid[i][j]*255*illumination);
@@ -229,4 +241,12 @@ function deepClone(obj, format) {
     clone[key] = deepClone(obj[keys[i]], format, refs);
   }
   return clone;
+}
+
+//Function to round number to nearest number
+function roundToFloor(inp,num)
+{
+  let mod = inp%num;
+  inp-=mod;
+  return int(inp);
 }

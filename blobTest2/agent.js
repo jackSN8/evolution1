@@ -88,7 +88,8 @@ class Agent
     this.velocity.add(this.acceleration);
     this.acceleration.mult(0);
     ///If it is dark, and the creature is hungry, it freezes to death
-    if(illumination<0.5 && this.fullness<=0)
+    
+    if(tempGridVals[int(this.position.x)][int(this.position.y)]<0.5 && this.fullness<=0)
     {
       this.die();
     }
