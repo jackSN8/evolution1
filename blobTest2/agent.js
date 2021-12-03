@@ -3,7 +3,7 @@
 
 class Agent
 {
-  constructor(size,maxs,maxf,dna)
+  constructor(size,maxs,maxf,dna,id)
   {
     //Positions of the agent for physics engine, should not be directly affeceted ever really
     this.position = createVector(random(bounds,width-bounds),random(bounds,height-bounds));
@@ -28,7 +28,7 @@ class Agent
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
-    this.id = int(random(0,2500));
+    this.id = id;
     this.mass = findDictPos('mass',dna,1);  
     this.width = findDictPos('size',dna,1);
     this.height = findDictPos('size',dna,1)*2.5;
@@ -101,7 +101,10 @@ class Agent
       this.giveBirth();
     }
     this.haveSex();
-
+    if(this.position.x>width-10||this.position.x<10||this.position.y>height-10||this.position.y<10)
+    {
+      this.die();
+    }
 
   }
 
@@ -379,10 +382,6 @@ class Agent
     //Incredibly dodgy right now - just moves agent offscreen and makes it unable to moves
     //Prbly want to add animation as well
     //If performance is problem tbd, actually delete agent
-    this.position = createVector(10000,10000);
-    this.velocity = createVector(0,0);
-    this.maxForce = 0;
-    this.maxSpeed = 0;
     this.dead = true;
   }
 

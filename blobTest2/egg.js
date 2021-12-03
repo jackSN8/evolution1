@@ -29,7 +29,7 @@ class egg
   hatch()
   {
     this.mutate();
-    agents.push(new Agent(5,1.0,0.05,this.dna));
+    agents.push(new Agent(5,1.0,0.05,this.dna,totalAgents));
     totalAgents++;
     agents[totalAgents-1].position.set(this.position);
     this.dead = true;

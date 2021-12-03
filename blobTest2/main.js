@@ -1,10 +1,10 @@
 
 
-let totalAgents = 5;
+let totalAgents = 50;
 let agents = [];
 let targ1;
 
-let totalFood = 40;
+let totalFood = 70;
 let foods = [];
 let otherEntities = [];
 let totalOtherStuff = 3;
@@ -14,7 +14,7 @@ let bounds = 70;
 let aliveCreatures = totalAgents;
 let timeDilation = 1;//Factor to speed up everything by, all functions of time are modified by this
 let perlinGridSize = 10;
-
+let noiseOffset;
 
 //creating a grid to store temperatures around the Map
 let tempGrid = [];
@@ -28,7 +28,7 @@ function setup()
   targ1 = createVector(200,200);
   for(let i=0; i<totalAgents; i++)
   {
-    agents.push(new Agent(5,1.0,0.05,formGenericDna()));
+    agents.push(new Agent(5,1.0,0.05,formGenericDna(),i));
   }
   for(let i=0; i<totalFood; i++)
   {
@@ -45,6 +45,8 @@ function setup()
     // {
     //   foods.push(new lavaPool(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
     // }  
+    noiseOffset = random(0,100);
+    // noiseOffset = 0;
   }
   for(let i=0; i<totalOtherStuff; i++)
   {
@@ -58,7 +60,7 @@ function setup()
     tempGrid[i].push(new Array(height));
     for(let j=0; j<height; j+=perlinGridSize)
     {
-      tempGrid[i][j] = noise(i/10,j/10);
+      tempGrid[i][j] = noise(i/100+noiseOffset,j/100+noiseOffset);
     }
   }
   for(let i=0; i<width; i++)
@@ -67,7 +69,7 @@ function setup()
     tempGridVals[i].push(new Array(height));
     for(let j=0; j<height; j++)
     {
-      tempGridVals[i][j] = noise(i/10,j/10);
+      tempGridVals[i][j] = noise(i/100+noiseOffset,j/100+noiseOffset);
     }
   }
 }
