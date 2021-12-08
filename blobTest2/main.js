@@ -194,12 +194,14 @@ function formGenericDna()
 {
   let dna = [];
   let color = [random(0,255),random(0,255),random(0,255)];
+  let pos = createVector(random(0,width),random(0,height));
   dna.push(['maxS',random(0.6,1.4),0.7,1.4,0.3]);
   dna.push(['maxF',random(0.05,0.09),0.03,0.07,0.03]);
   dna.push(['size',random(3,7),3,7,3]);
   dna.push(['mass',random(0.7,1.3),0.7,1.3,0.1]);
   dna.push(['searchConeAngle',random(PI/8,PI/3),PI/8,PI/3,PI/16]);
   dna.push(['searchConeRadius',random(40,150),40,150,10]);
+  dna.push(['pos',pos]);//pos also can't mutate, so at end
   dna.push(['color',color]);///Color must be last due to mutate function excluding it
   return dna;
 }

@@ -1,4 +1,4 @@
-// var _ = require('lodash');
+ // var _ = require('lodash');
 
 
 class Agent
@@ -28,6 +28,7 @@ class Agent
     //Flaw in that it allows much sharper turns at slower speeds
     //which makes sense but this can do 180 in 0 seconds when still
 
+    this.tendPos = findDictPos('pos',dna,1);
     this.id = id;
     this.mass = findDictPos('mass',dna,1);  
     this.width = findDictPos('size',dna,1);
@@ -56,6 +57,7 @@ class Agent
     //dumb variable to store if the agent has recently been turning
     //used to add overcorrection (or under correction) to turns
     this.t = random(0,1000);
+
 
 
     // ////Depricated variables
@@ -274,6 +276,18 @@ class Agent
 
   }
 
+  //Agents should move towards a position selected in 2d gausian space from a certain
+  //random pos & sd of gausian and random pos are selected via genes
+  tendTowards()
+  {
+    //Find random position on gaussian circle 
+    //Then seek
+    //Once distance to pos is small, reset and find new pos 
+    let rAngle = random(0,TWO_PI);
+    let gaus = randomGaussian(0, 15);
+
+
+  }
 
 
 

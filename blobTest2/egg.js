@@ -43,7 +43,8 @@ class egg
 
   mutate()
   {//Loop through dna, not to full length though due to color gene not mutating
-    for(let i=0; i<this.dna.length-1; i++)
+  //And pos gene right now. Pos gene mutation must be added in at one point
+    for(let i=0; i<this.dna.length-2; i++)
     {
       if(int(random(0,10))==1)
       {
