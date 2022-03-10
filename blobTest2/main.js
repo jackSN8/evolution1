@@ -60,7 +60,7 @@ function setup()
     tempGrid[i].push(new Array(height));
     for(let j=0; j<height; j+=perlinGridSize)
     {
-      tempGrid[i][j] = noise(i/100+noiseOffset,j/100+noiseOffset);
+      tempGrid[i][j] = noise(i/(1*100)+noiseOffset,j/(1*100)+noiseOffset);
     }
   }
   for(let i=0; i<width; i++)
@@ -96,6 +96,7 @@ function draw()
     agents[i].avoidWalls(bounds,width-bounds,bounds,height-bounds);
     agents[i].avoidOthers(agents,10);
     //agents[i].searchFor(agents);
+    //agents[i].arrive(targ1);
     agents[i].searchFor(foods);
     agents[i].eatAgents(agents);
     agents[i].eatPlants();
@@ -128,7 +129,7 @@ function draw()
     }
   }
   //drawBlob();
-  
+  drawButtons();
 
   ////Write to screen how many alive creatures there are
   //Count alive agents
@@ -144,6 +145,38 @@ function draw()
   text(time%PI,width-70,50);
   ///Draw graph against time showing how many creatures are alive
 }
+
+function drawButtons()
+{
+  fill(255);
+  text("increase food",90,20);
+  text("decrease food",10,20);
+  leftButtonPos = createVector(50,40);
+  rightButtonPos = createVector(120,40);
+  mousePos = createVector(mouseX,mouseY);
+  circle(leftButtonPos.x,leftButtonPos.y,20);
+  circle(rightButtonPos.x,rightButtonPos.y,20);
+  if(p5.Vector.sub(leftButtonPos,mousePos).mag()<10)
+  {
+    fill(0,255,0);
+    circle(leftButtonPos.x,leftButtonPos.y,10);
+    if (mouseIsPressed === true) 
+    {
+      totalFood -=10;
+    }
+  }
+  if(p5.Vector.sub(rightButtonPos,mousePos).mag()<10)
+  {
+    fill(0,255,0);
+    circle(rightButtonPos.x,rightButtonPos.y,10);
+    if (mouseIsPressed === true) 
+    {
+      totalFood +=10;
+    }
+  }
+}
+
+
 
 function drawBlob()
 {
@@ -178,6 +211,7 @@ function drawBlob()
 
   stroke(127);
 }
+
 
 function polarToCartesian(radius,theta)
 {

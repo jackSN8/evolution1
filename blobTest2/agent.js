@@ -180,10 +180,10 @@ class Agent
         let vecRel = p5.Vector.sub(pots[i],(this.position));
         // //Tempory code to visualise that vector
         // push();
-        // translate(this.position.x,this.position.y);
+        // translate(this.position.x,this.position.y); 
         // line(0,0,vecRel.x,vecRel.y);
         // pop();
-
+        //console.log(vecRel.x);
         //Find angle of target relative to current heading of agent
         let tgtHeading = vecRel.heading();
         let headingDif = this.velocity.heading()-tgtHeading;
@@ -301,10 +301,10 @@ class Agent
       rotate(this.theta);
 // <<<<<<< HEAD
       // //Code to visualize search cone
-      // fill(255,255,255,30);
-      // arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
-      // let searchLine = createVector(0,this.searchConeRadius);
-      // line(0,0,searchLine.x,searchLine.y);
+      fill(255,255,255,30);
+      arc(0, 0, this.searchConeRadius, this.searchConeRadius,PI/2-this.searchConeAngle/2, (PI/2)+this.searchConeAngle/2, PIE);
+      let searchLine = createVector(0,this.searchConeRadius);
+      line(0,0,searchLine.x,searchLine.y);
       //Then, find positions of all objects in array
       pop();
       let pots = [];
