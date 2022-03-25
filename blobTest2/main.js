@@ -95,7 +95,7 @@ function draw()
     agents[i].update();
     agents[i].avoidWalls(bounds,width-bounds,bounds,height-bounds);
     agents[i].avoidOthers(agents,10);
-    //agents[i].searchFor(agents);
+    // agents[i].searchFor(agents);
     //agents[i].arrive(targ1);
     agents[i].searchFor(foods);
     agents[i].eatAgents(agents);
@@ -142,7 +142,8 @@ function draw()
     }
   }
   text(aliveCreatures,width-70,20);
-  text(time%PI,width-70,50);
+  text(time%TWO_PI,width-70,50);
+  text("fps: " + int(frameRate()),width-70,80);
   ///Draw graph against time showing how many creatures are alive
 }
 
@@ -171,7 +172,11 @@ function drawButtons()
     circle(rightButtonPos.x,rightButtonPos.y,10);
     if (mouseIsPressed === true) 
     {
-      totalFood +=10;
+      for(let i=0; i<10; i++)
+      {
+        totalFood++;
+        foods.push(new food(createVector(random(bounds,width-bounds),random(bounds,height-bounds))));
+      }
     }
   }
 }

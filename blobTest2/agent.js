@@ -261,10 +261,7 @@ class Agent
 
     //Now create a vector pointing to that point
     let targetWanderPoint = createVector(1,0);
-    targetWanderPoint.setHeading(this.theta+searchConeAngle+PI/2)
-    targetWanderPoint.setMag(this.searchConeRadius);
-
-    //Now translate that vector
+    //targetWanderPoint.setHeading(this.theta+searchConeAngle+PI/2)s
     targetWanderPoint = p5.Vector.add(this.position,targetWanderPoint);
     //DEBUG: line(this.position.x,this.position.y,targetWanderPoint.x,targetWanderPoint.y);
     ////Now aim for that point
@@ -342,7 +339,7 @@ class Agent
   eatPlants()
   {
     let foodDistances = [];
-    for(let i=0; i<foods.length; i++)
+    for(let i=0; i<totalFood; i++)
     {
       foodDistances.push(p5.Vector.sub(this.position,foods[i].position).mag());
       if(foodDistances[i]<this.width)
