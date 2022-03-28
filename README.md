@@ -1,3 +1,3 @@
 # evolution1
-basically many creatures live in this world n stuff happens etc
-bte give em food peace out
+Run the code at this link: 
+https://jacksn8.github.io/evolution1/
